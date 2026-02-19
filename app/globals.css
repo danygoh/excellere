@@ -30,9 +30,8 @@
   --warning: #f59e0b;
   
   /* Typography */
-  --font-display: 'Syne', -apple-system, sans-serif;  /* Headlines & Logo */
-  --font-ui: 'Plus Jakarta Sans', -apple-system, sans-serif;  /* UI, nav, labels, buttons */
-  --font-body: 'Lora', Georgia, serif;  /* Body text, reading passages */
+  --font-display: 'DM Sans', -apple-system, sans-serif;  /* Headlines, UI, nav, buttons */
+  --font-body: 'Playfair Display', Georgia, serif;  /* Body text, reading passages */
   --font-mono: 'JetBrains Mono', monospace;  /* Labels, tags, code */
   
   /* Spacing */
@@ -86,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* UI elements use Plus Jakarta Sans */
 button, input, select, textarea, nav, .nav, .btn {
-  font-family: var(--font-ui) !important;
+  font-family: var(--font-display) !important;
 }
 
 /* Code and tags use JetBrains Mono */
@@ -118,7 +117,7 @@ a:hover { color: var(--accent-gold); }
 
 /* Forms */
 input, textarea, select {
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
   font-size: 1rem;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-medium);
@@ -151,7 +150,7 @@ label {
 
 /* Buttons */
 button, .btn {
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
   font-size: 0.9375rem;
   font-weight: 600;
   padding: var(--space-md) var(--space-xl);
