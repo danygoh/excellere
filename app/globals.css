@@ -31,7 +31,7 @@
   
   /* Typography */
   --font-display: 'Syne', -apple-system, sans-serif;
-  --font-body: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Syne', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
   /* Spacing */
@@ -69,7 +69,7 @@ html {
 }
 
 body {
-  font-family: var(--font-display);  /* Lora for reading */
+  font-family: var(--font-display);
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.7;
