@@ -30,9 +30,10 @@
   --warning: #f59e0b;
   
   /* Typography */
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-ui: 'Syne', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Syne', -apple-system, sans-serif;  /* Headlines & Logo */
+  --font-ui: 'Plus Jakarta Sans', -apple-system, sans-serif;  /* UI, nav, labels, buttons */
+  --font-body: 'Lora', Georgia, serif;  /* Body text, reading passages */
+  --font-mono: 'JetBrains Mono', monospace;  /* Labels, tags, code */
   
   /* Spacing */
   --space-xs: 4px;
@@ -69,11 +70,28 @@ html {
 }
 
 body {
-  font-family: var(--font-ui);
+  font-family: var(--font-body);  /* Lora for reading */
   background: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.7;
   min-height: 100vh;
+}
+
+/* Typography - Heading uses Syne */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* UI elements use Plus Jakarta Sans */
+button, input, select, textarea, nav, .nav, .btn {
+  font-family: var(--font-ui) !important;
+}
+
+/* Code and tags use JetBrains Mono */
+code, pre, .tag, .label, .mono {
+  font-family: var(--font-mono);
 }
 
 /* Typography */
