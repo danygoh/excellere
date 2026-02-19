@@ -1,0 +1,533 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: var(--space-lg);
+}
+
+.progressContainer {
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.progressText {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+}
+
+.content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.step {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stepHeader {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.stepNumber {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  margin-bottom: var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--accent-gold-dim);
+  border-radius: var(--radius-full);
+}
+
+.stepHeader h1 {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.stepHeader p {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+/* Form Styles */
+.form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.formGroup {
+  margin-bottom: var(--space-lg);
+}
+
+.formGroup label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: var(--font-ui);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px var(--accent-gold-dim);
+}
+
+.formGroup input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.btnPrimary, .btnSecondary {
+  width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.btnPrimary {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: none;
+}
+
+.btnPrimary:hover {
+  background: #f5c95e;
+  transform: translateY(-1px);
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+.btnSecondary:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* Scanning Step */
+.scanStart {
+  text-align: center;
+  padding: var(--space-3xl) 0;
+}
+
+.scanning {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+}
+
+.scanVisual {
+  margin-bottom: var(--space-xl);
+}
+
+.scanCircle {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 3px solid var(--accent-teal);
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.scanInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+  border-radius: 50%;
+  animation: scan-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes scan-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+.scanProgressText {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.progressBar {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Mirror Step */
+.mirrorCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.archetype {
+  margin-bottom: var(--space-xl);
+}
+
+.archetypeIcon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.archetype h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--accent-gold);
+}
+
+.profileDetails {
+  text-align: left;
+  margin-bottom: var(--space-xl);
+}
+
+.profileSection {
+  margin-bottom: var(--space-lg);
+}
+
+.profileSection h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.profileSection ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profileSection li {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.profileSection li::before {
+  content: '✓';
+  color: var(--accent-teal);
+  margin-right: var(--space-sm);
+}
+
+.profileTags {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+
+.tag {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--accent-gold-dim);
+  color: var(--accent-gold);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.mirrorActions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.mirrorActions button {
+  flex: 1;
+}
+
+/* Calibration */
+.calibration {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.questionProgress {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-teal);
+  margin-bottom: var(--space-lg);
+}
+
+.questionText {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-xl);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.optionBtn {
+  text-align: left;
+  padding: var(--space-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optionBtn:hover {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+}
+
+/* Fingerprint */
+.fingerprint {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.archetypeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--accent-gold-dim);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-xl);
+}
+
+.archetypeBadge span:first-child {
+  font-size: 1.5rem;
+}
+
+.archetypeBadge span:last-child {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--accent-gold);
+}
+
+.dimensions {
+  text-align: left;
+  margin-bottom: var(--space-xl);
+}
+
+.dimension {
+  margin-bottom: var(--space-lg);
+}
+
+.dimensionHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+}
+
+.dimensionBar {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.dimensionFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.fingerprintNote {
+  padding: var(--space-lg);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xl);
+}
+
+.fingerprintNote p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.fingerprintActions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.fingerprintActions button {
+  flex: 1;
+}
+
+/* Module Selection */
+.modulesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.moduleOption {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+}
+
+.moduleOption:hover {
+  border-color: var(--accent-gold);
+}
+
+.moduleIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.moduleContent {
+  flex: 1;
+}
+
+.moduleContent h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: var(--space-xs);
+}
+
+.moduleContent p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-sm);
+}
+
+.moduleOutcome {
+  font-size: 0.8125rem;
+  color: var(--accent-teal);
+}
+
+.moduleOutcome span {
+  font-weight: 600;
+}
+
+.moduleTailored {
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  margin-top: var(--space-xs);
+}
+
+.btnSelect {
+  padding: var(--space-sm) var(--space-lg);
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: center;
+}
+
+.btnSelect:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.moduleActions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.moduleActions button {
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stepHeader h1 {
+    font-size: 2rem;
+  }
+  
+  .moduleOption {
+    flex-direction: column;
+  }
+  
+  .btnSelect {
+    width: 100%;
+  }
+}

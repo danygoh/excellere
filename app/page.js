@@ -1,333 +1,194 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import styles from './page.module.css'
 
 export default function Home() {
+  const [demoMode, setDemoMode] = useState(false)
+
   return (
-    <main>
+    <div className={styles.container}>
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 48px',
-        height: '80px',
-        background: 'rgba(13,17,23,0.95)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(48,54,61,0.5)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Logo - using text since we have the image */}
-          <div style={{ 
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: '24px',
-            fontWeight: 700,
-            color: '#fff',
-            letterSpacing: '2px'
-          }}>
-            EXC<span style={{ color: '#3B82F6' }}>ELLER</span>E
-          </div>
+      <nav className={styles.nav}>
+        <div className={styles.logo}>
+          <span className={styles.logoIcon}>✦</span>
+          <span>Excellere</span>
         </div>
-        
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-          <a href="#about" style={{ 
-            fontSize: '13px', 
-            fontWeight: 500, 
-            color: '#8B949E', 
-            textDecoration: 'none',
-            fontFamily: "'Montserrat', sans-serif",
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>About</a>
-          <a href="#programme" style={{ 
-            fontSize: '13px', 
-            fontWeight: 500, 
-            color: '#8B949E', 
-            textDecoration: 'none',
-            fontFamily: "'Montserrat', sans-serif",
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>Programme</a>
-          <a href="#team" style={{ 
-            fontSize: '13px', 
-            fontWeight: 500, 
-            color: '#8B949E', 
-            textDecoration: 'none',
-            fontFamily: "'Montserrat', sans-serif",
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>Team</a>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <Link href="/login" style={{ 
-            padding: '12px 24px', 
-            color: '#8B949E', 
-            fontSize: '13px', 
-            fontWeight: 500,
-            textDecoration: 'none',
-            fontFamily: "'Montserrat', sans-serif",
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
-          }}>Log In</Link>
-          <Link href="/signup" className="btn btn-primary">
-            Get Started
-          </Link>
+        <div className={styles.navLinks}>
+          <Link href="/login" className={styles.navLink}>Log in</Link>
+          <Link href="/signup" className={styles.btnPrimary}>Get Started</Link>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section style={{
-        position: 'relative',
-        padding: '180px 48px 120px',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        background: 'linear-gradient(180deg, #0D1117 0%, #161B22 100%)',
-        overflow: 'hidden'
-      }}>
-        {/* Background pattern */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(30, 64, 175, 0.15) 0%, transparent 50%)',
-          pointerEvents: 'none'
-        }} />
-        
-        <div className="container" style={{ position: 'relative', zIndex: 1, maxWidth: '1000px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <h1 className="display-font" style={{
-              fontSize: 'clamp(36px, 5vw, 64px)',
-              color: '#fff',
-              marginBottom: '24px',
-              lineHeight: 1.2
-            }}>
-              Together, we come up with ideas to make a{' '}
-              <span style={{ color: '#3B82F6' }}>better world</span> for everyone.
-            </h1>
-            
-            <p style={{
-              fontSize: '18px',
-              color: '#8B949E',
-              lineHeight: 1.8,
-              marginBottom: '48px',
-              maxWidth: '700px',
-              margin: '0 auto 48px',
-              fontFamily: "'Source Sans Pro', sans-serif"
-            }}>
-              Excellere is an independent, non-partisan research organisation that develops 
-              and disseminates actionable data- and algorithm-driven ideas and solutions 
-              to foster sustainable economies, governments and societies.
-            </p>
-            
-            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-              <Link href="/signup" className="btn btn-primary" style={{ padding: '16px 40px' }}>
-                Start Your Journey
-              </Link>
-              <a href="#programme" className="btn btn-secondary" style={{ padding: '16px 40px' }}>
-                Learn More
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission Section */}
-      <section id="about" style={{
-        padding: '120px 48px',
-        background: '#161B22'
-      }}>
-        <div className="container">
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
-            gap: '60px',
-            alignItems: 'center'
-          }}>
-            <div>
-              <div style={{
-                width: '100%',
-                height: '400px',
-                background: 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: "'Inknut Antiqua', serif",
-                fontSize: '24px',
-                color: 'rgba(255,255,255,0.3)'
-              }}>
-                [Excellere Loop Graphic]
-              </div>
-            </div>
-            
-            <div>
-              <h2 style={{
-                fontSize: '32px',
-                marginBottom: '24px',
-                color: '#fff'
-              }}>
-                Our conviction is guided by <strong style={{ color: '#3B82F6' }}>the Excellere Loop</strong>
-              </h2>
-              
-              <p style={{
-                fontSize: '17px',
-                color: '#8B949E',
-                lineHeight: 1.8,
-                marginBottom: '20px'
-              }}>
-                We produce actionable ideas to create a sustainable economy and society 
-                by unleashing and expanding human potential through frontier technologies.
-              </p>
-              
-              <p style={{
-                fontSize: '17px',
-                color: '#8B949E',
-                lineHeight: 1.8
-              }}>
-                We help industry leaders, government ministries and entrepreneurs make 
-                informed decisions so they can ride the technology wave and achieve 
-                sustainable goals.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* AI Programme Section */}
-      <section id="programme" style={{
-        padding: '120px 48px',
-        background: '#0D1117'
-      }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{
-              fontSize: '36px',
-              marginBottom: '16px',
-              color: '#fff'
-            }}>
-              The <span style={{ color: '#3B82F6' }}>AI Fluency Programme</span>
-            </h2>
-            <p style={{ color: '#8B949E', fontSize: '18px' }}>
-              A comprehensive programme for business leaders
-            </p>
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <div className={styles.badge}>
+            <span className={styles.badgeDot}></span>
+            AI-Native Learning
           </div>
           
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '24px',
-            maxWidth: '1000px',
-            margin: '0 auto'
-          }}>
-            {[
-              { num: '01', title: 'AI Fundamentals', desc: 'Understanding the AI landscape without technical jargon' },
-              { num: '02', title: 'Strategic Adoption', desc: 'How to assess AI opportunities in your organisation' },
-              { num: '03', title: 'Corporate Governance', desc: 'Risk, compliance, and ethical considerations' },
-              { num: '04', title: 'AI-Ready Teams', desc: 'Building teams for the AI age' },
-              { num: '05', title: 'Financial Performance', desc: 'Measuring ROI and investment cases' },
-              { num: '06', title: 'Innovation & AI', desc: 'Competitive advantage through AI' }
-            ].map((item, i) => (
-              <div key={i} className="card" style={{ 
-                padding: '32px',
-                borderLeft: i % 2 === 0 ? '3px solid #3B82F6' : '3px solid #1E40AF'
-              }}>
-                <div style={{ 
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: '14px', 
-                  color: '#3B82F6', 
-                  fontWeight: 600,
-                  marginBottom: '12px'
-                }}>
-                  {item.num}
-                </div>
-                <h3 style={{ 
-                  fontSize: '18px', 
-                  marginBottom: '8px', 
-                  color: '#fff',
-                  fontFamily: "'Montserrat', sans-serif"
-                }}>
-                  {item.title}
-                </h3>
-                <p style={{ color: '#8B949E', fontSize: '14px', lineHeight: 1.6 }}>
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
+          <h1 className={styles.heroTitle}>
+            Learn AI strategically.<br />
+            <span className={styles.heroTitleAccent}>Not technically.</span>
+          </h1>
           
-          <div style={{ textAlign: 'center', marginTop: '48px' }}>
-            <Link href="/signup" className="btn btn-primary" style={{ padding: '16px 48px' }}>
-              Enroll Now
+          <p className={styles.heroSubtitle}>
+            Personalised executive education that adapts to your role, 
+            sector, and thinking style. From your first minute.
+          </p>
+          
+          <div className={styles.heroCta}>
+            <Link href="/signup" className={styles.btnPrimary}>
+              Start Your Journey
+              <span className={styles.btnArrow}>→</span>
             </Link>
+            <button 
+              onClick={() => setDemoMode(!demoMode)}
+              className={styles.btnSecondary}
+            >
+              Watch Demo
+            </button>
+          </div>
+        </div>
+
+        {/* Hero Visual */}
+        <div className={styles.heroVisual}>
+          <div className={styles.demoPreview}>
+            <div className={styles.demoHeader}>
+              <div className={styles.demoDots}>
+                <span></span><span></span><span></span>
+              </div>
+              <span className={styles.demoTitle}>Excellere</span>
+            </div>
+            <div className={styles.demoContent}>
+              <div className={styles.demoProfile}>
+                <div className={styles.demoAvatar}>SC</div>
+                <div>
+                  <div className={styles.demoName}>Sarah Chen</div>
+                  <div className={styles.demoRole}>Head of Strategy, FinTech Co</div>
+                </div>
+              </div>
+              <div className={styles.demoStats}>
+                <div className={styles.demoStat}>
+                  <span className={styles.demoStatValue}>87%</span>
+                  <span className={styles.demoStatLabel}>Mastered</span>
+                </div>
+                <div className={styles.demoStat}>
+                  <span className={styles.demoStatValue}>3</span>
+                  <span className={styles.demoStatLabel}>Modules</span>
+                </div>
+                <div className={styles.demoStat}>
+                  <span className={styles.demoStatValue}>12</span>
+                  <span className={styles.demoStatLabel}>Sessions</span>
+                </div>
+              </div>
+              <div className={styles.demoProgress}>
+                <div className={styles.demoProgressLabel}>Current Module</div>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{width: '65%'}}></div>
+                </div>
+                <div className={styles.demoProgressText}>AI-Native Business Design • 65%</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Quote Section */}
-      <section style={{
-        padding: '80px 48px',
-        background: 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)',
-        textAlign: 'center'
-      }}>
-        <div className="container">
-          <blockquote style={{
-            fontSize: 'clamp(20px, 3vw, 32px)',
-            fontFamily: "'Inknut Antiqua', serif",
-            color: '#fff',
-            maxWidth: '800px',
-            margin: '0 auto',
-            lineHeight: 1.5,
-            fontStyle: 'italic'
-          }}>
-            "Excellere, where human potential is unleashed and development capabilities are 'accelerated'."
-          </blockquote>
+      {/* Features Section */}
+      <section className={styles.features}>
+        <h2 className={styles.sectionTitle}>
+          Built different.<br />
+          <span className={styles.sectionTitleAccent}>For leaders like you.</span>
+        </h2>
+        
+        <div className={styles.featureGrid}>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <span>🧠</span>
+            </div>
+            <h3>Cognitive First</h3>
+            <p>We build your cognitive profile before teaching anything. Know your thinking style, strengths, and gaps from minute one.</p>
+          </div>
+          
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <span>🔄</span>
+            </div>
+            <h3>Adaptive Practice</h3>
+            <p>The Understand → Teach → Analyse → Feedback loop adapts in real-time. Questions get harder as you improve.</p>
+          </div>
+          
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <span>💎</span>
+            </div>
+            <h3>Personalised Feedback</h3>
+            <p>Every response gets feedback that references YOUR role, YOUR sector, YOUR exact words. Not generic advice.</p>
+          </div>
         </div>
+      </section>
+
+      {/* Modules Preview */}
+      <section className={styles.modules}>
+        <h2 className={styles.sectionTitle}>
+          Three transformative<br />
+          <span className={styles.sectionTitleAccent}>modules.</span>
+        </h2>
+        
+        <div className={styles.moduleGrid}>
+          <div className={styles.moduleCard}>
+            <div className={styles.moduleNumber}>01</div>
+            <h3>AI-Native Business Design</h3>
+            <p>Audit which of your core processes are AI-native vs AI-augmented. Produce a board-ready document.</p>
+            <div className={styles.moduleOutcome}>
+              <span>Outcome:</span> AI-Native Firm Audit
+            </div>
+          </div>
+          
+          <div className={styles.moduleCard}>
+            <div className={styles.moduleNumber}>02</div>
+            <h3>Double Loop Strategy</h3>
+            <p>Master the strategy framework that separates good leaders from great ones. Apply to your business unit.</p>
+            <div className={styles.moduleOutcome}>
+              <span>Outcome:</span> Double Loop Strategy Canvas
+            </div>
+          </div>
+          
+          <div className={styles.moduleCard}>
+            <div className={styles.moduleNumber}>03</div>
+            <h3>Agentic AI</h3>
+            <p>Identify where agentic AI could replace human-led workflows. Map your opportunities.</p>
+            <div className={styles.moduleOutcome}>
+              <span>Outcome:</span> Agent Opportunity Map
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className={styles.cta}>
+        <h2>Ready to transform<br />your AI fluency?</h2>
+        <p>Join senior leaders who are already ahead of the curve.</p>
+        <Link href="/signup" className={styles.btnPrimary}>
+          Begin Now
+          <span className={styles.btnArrow}>→</span>
+        </Link>
       </section>
 
       {/* Footer */}
-      <footer style={{ 
-        padding: '40px 48px', 
-        background: '#0D1117',
-        borderTop: '1px solid #30363D'
-      }}>
-        <div className="container">
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '20px'
-          }}>
-            <div style={{ 
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: '18px',
-              fontWeight: 700,
-              color: '#fff',
-              letterSpacing: '2px'
-            }}>
-              EXC<span style={{ color: '#3B82F6' }}>ELLER</span>E
-            </div>
-            
-            <div style={{ display: 'flex', gap: '24px' }}>
-              <a href="#" style={{ color: '#8B949E', textDecoration: 'none', fontSize: '13px' }}>About</a>
-              <a href="#" style={{ color: '#8B949E', textDecoration: 'none', fontSize: '13px' }}>Research</a>
-              <a href="#" style={{ color: '#8B949E', textDecoration: 'none', fontSize: '13px' }}>Contact</a>
-            </div>
-            
-            <div style={{ color: '#8B949E', fontSize: '14px' }}>
-              © 2025 Excellere. All rights reserved.
-            </div>
+      <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerLogo}>
+            <span className={styles.logoIcon}>✦</span>
+            <span>Excellere</span>
           </div>
+          <p className={styles.footerText}>
+            © 2026 Excellere. AI-Native Learning for Business Leaders.
+          </p>
         </div>
       </footer>
-    </main>
+    </div>
   )
 }
