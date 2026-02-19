@@ -1,0 +1,313 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.content {
+  flex: 1;
+}
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-lg);
+}
+
+.sectionDesc {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+/* Coaches Grid */
+.coachesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.coachCard {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.coachCard:hover {
+  border-color: var(--accent-gold);
+}
+
+.coachCard.selected {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+}
+
+.coachAvatar {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-violet));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.coachInfo {
+  flex: 1;
+}
+
+.coachInfo h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: var(--space-xs);
+}
+
+.coachRole {
+  font-size: 0.875rem;
+  color: var(--accent-teal);
+  margin-bottom: var(--space-sm);
+}
+
+.coachExpertise {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+}
+
+.tag {
+  padding: 2px 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+}
+
+.coachStats {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.coachPrice {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  align-self: center;
+}
+
+/* Bio Section */
+.bioSection {
+  padding: var(--space-xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+}
+
+.bioSection h3 {
+  font-family: var(--font-display);
+  margin-bottom: var(--space-sm);
+}
+
+.bioSection p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.btnPrimary, .btnSecondary {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: none;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+/* Artefacts */
+.artefactsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.artefactOption {
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.artefactInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.artefactInfo h4 {
+  font-weight: 600;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+}
+
+.badge.ready {
+  background: var(--accent-teal-dim);
+  color: var(--accent-teal);
+}
+
+.badge.draft {
+  background: var(--accent-gold-dim);
+  color: var(--accent-gold);
+}
+
+.strengthBar span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.bar {
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  margin-top: var(--space-xs);
+  overflow: hidden;
+}
+
+.bar div {
+  height: 100%;
+  background: var(--accent-teal);
+  border-radius: var(--radius-full);
+}
+
+/* Confirm */
+.confirmCard {
+  text-align: center;
+  padding: var(--space-2xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+}
+
+.confirmIcon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: var(--space-lg);
+}
+
+.confirmCard h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.confirmCard > p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+.confirmDetails {
+  text-align: left;
+  padding: var(--space-lg);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+}
+
+.confirmDetails div {
+  margin-bottom: var(--space-sm);
+}
+
+.confirmNote {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-lg);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  height: fit-content;
+}
+
+.sidebar h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.expectList {
+  list-style: none;
+}
+
+.expectList li {
+  padding: var(--space-sm) 0;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.expectList li:last-child {
+  border-bottom: none;
+}
+
+.expectList li::before {
+  content: '✓';
+  color: var(--accent-teal);
+  margin-right: var(--space-sm);
+}
+
+@media (max-width: 1024px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+}
