@@ -531,3 +531,45 @@
     width: 100%;
   }
 }
+
+.uploadBox {
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--bg-tertiary);
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.uploadBox:hover {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+}
+
+.uploadLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.uploadLabel:hover {
+  border-color: var(--accent-gold);
+}
+
+.uploadIcon {
+  font-size: 1.25rem;
+}
+
+.uploadHint {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-sm);
+}

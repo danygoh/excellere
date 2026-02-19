@@ -255,6 +255,45 @@ function IdentityStep({ formData, setFormData, onNext }) {
             placeholder="Paste your CV text here, or upload below..."
             rows={4}
           />
+          
+          {/* File Upload */}
+          <div className={styles.uploadBox}>
+            <input
+              type="file"
+              id="cv-upload"
+              accept=".pdf,.docx,.doc,.txt"
+              onChange={async (e) => {
+                const file = e.target.files[0]
+                if (!file) return
+                
+                try {
+                  let text = ''
+                  if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                    text = await file.text()
+                  } else if (file.name.endsWith('.pdf')) {
+                    alert('For PDF files, please copy-paste the text content. PDF parsing requires server-side processing.')
+                    return
+                  } else if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
+                    alert('For Word documents, please copy-paste the text content. Doc parsing requires server-side processing.')
+                    return
+                  }
+                  
+                  if (text) {
+                    setFormData({...formData, cvText: text})
+                  }
+                } catch (err) {
+                  console.error('Error reading file:', err)
+                  alert('Error reading file. Please copy-paste your CV text instead.')
+                }
+              }}
+              style={{ display: 'none' }}
+            />
+            <label htmlFor="cv-upload" className={styles.uploadLabel}>
+              <span className={styles.uploadIcon}>📎</span>
+              <span>Upload CV (PDF, Word, or Text)</span>
+            </label>
+            <p className={styles.uploadHint}>Or drag and drop a file</p>
+          </div>
         </div>
 
         <button type="submit" className={styles.btnPrimary}>
