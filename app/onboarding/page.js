@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useUser } from '../../context/UserContext'
 import styles from './onboarding.module.css'
 
 // Onboarding steps
@@ -16,6 +17,7 @@ const STEPS = [
 
 export default function Onboarding() {
   const router = useRouter()
+  const { user, updateProfile } = useUser()
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState({
     // Identity
@@ -38,6 +40,19 @@ export default function Onboarding() {
   const progress = ((currentStep + 1) / STEPS.length) * 100
 
   const handleNext = () => {
+    // Save profile when completing onboarding
+    if (currentStep === STEPS.length - 1 && profile) {
+      updateProfile({
+        ...formData,
+        cognitiveFingerprint: {
+          archetype: profile.archetype,
+          dimensions: profile.dimensions,
+          strengths: profile.strengths,
+          gaps: profile.gaps
+        }
+      })
+    }
+    
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {

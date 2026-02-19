@@ -485,3 +485,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+.logoutBtn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: var(--space-md);
+}
+
+.logoutBtn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: var(--text-secondary);
+}

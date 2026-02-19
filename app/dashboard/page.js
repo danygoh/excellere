@@ -1,18 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useUser } from '../../context/UserContext'
 import styles from './dashboard.module.css'
 
 export default function Dashboard() {
+  const router = useRouter()
+  const { user, logout } = useUser()
   const [activeTab, setActiveTab] = useState('overview')
 
-  // Mock user data
-  const user = {
-    name: 'Sarah',
-    role: 'Head of Strategy',
-    sector: 'FinTech',
-    archetype: 'Strategic Reframer',
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      router.push('/login')
+    }
+  }, [user, router])
+
+  if (!user) {
+    return <div className={styles.loading}>Loading...</div>
+  }
+
+  // Use user data or defaults
+  const userData = {
+    name: user.name || 'User',
+    role: user.role || 'Learner',
+    sector: user.sector || 'General',
+    archetype: user.cognitiveFingerprint?.archetype || 'Explorer',
     progress: {
       overall: 35,
       modules: [
@@ -32,12 +47,17 @@ export default function Dashboard() {
     }
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
   return (
     <div className={styles.container}>
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <span>✦</span> Excellere
+          <Link href="/dashboard"><span>✦</span> Excellere</Link>
         </div>
         
         <nav className={styles.nav}>
@@ -69,18 +89,21 @@ export default function Dashboard() {
             className={`${styles.navItem} ${activeTab === 'profile' ? styles.active : ''}`}
             onClick={() => setActiveTab('profile')}
           >
-            <span>👤</span> Profile
+            <span>🧠</span> Profile
           </button>
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <div className={styles.cognitiveBadge}>
-            <span>🧠</span>
+          <div className={styles.userInfo}>
+            <div className={styles.avatar}>{userData.name[0]}</div>
             <div>
-              <div className={styles.badgeTitle}>{user.archetype}</div>
-              <div className={styles.badgeSubtitle}>Your Cognitive Style</div>
+              <div className={styles.userName}>{userData.name}</div>
+              <div className={styles.userRole}>{userData.role}</div>
             </div>
           </div>
+          <button onClick={handleLogout} className={styles.logoutBtn}>
+            Logout
+          </button>
         </div>
       </aside>
 
@@ -89,73 +112,89 @@ export default function Dashboard() {
         {/* Header */}
         <header className={styles.header}>
           <div>
-            <h1>Welcome back, {user.name}</h1>
+            <h1>Welcome back, {userData.name}</h1>
             <p>Continue your AI learning journey</p>
           </div>
-          <div className={styles.headerActions}>
-            <Link href="/learn" className={styles.btnPrimary}>
-              Continue Learning →
-            </Link>
-          </div>
+          <Link href="/learn" className={styles.continueBtn}>
+            Continue Learning →
+          </Link>
         </header>
 
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className={styles.content}>
-            {/* Stats Grid */}
+            {/* Stats */}
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <div className={styles.statValue}>{user.progress.overall}%</div>
+                <div className={styles.statValue}>{userData.progress.overall}%</div>
                 <div className={styles.statLabel}>Overall Progress</div>
-                <div className={styles.progressBar}>
-                  <div className={styles.progressFill} style={{width: `${user.progress.overall}%`}}></div>
-                </div>
               </div>
               <div className={styles.statCard}>
-                <div className={styles.statValue}>{user.sessions}</div>
+                <div className={styles.statValue}>{userData.sessions}</div>
                 <div className={styles.statLabel}>Sessions Completed</div>
               </div>
               <div className={styles.statCard}>
-                <div className={styles.statValue}>{user.artefacts.length}</div>
-                <div className={styles.statLabel}>Artefacts In Progress</div>
+                <div className={styles.statValue}>{userData.artefacts.length}</div>
+                <div className={styles.statLabel}>Artefacts Created</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statValue}>🔥</div>
+                <div className={styles.statLabel}>7 Day Streak</div>
               </div>
             </div>
 
-            {/* Next Session */}
-            <div className={styles.nextSession}>
-              <h3>Next Session</h3>
-              <div className={styles.sessionCard}>
-                <div className={styles.sessionType}>{user.nextSession.type}</div>
-                <div className={styles.sessionTopic}>{user.nextSession.topic}</div>
-                <div className={styles.sessionTime}>{user.nextSession.time}</div>
-                <Link href="/learn" className={styles.btnPrimary}>
-                  Start Now
+            {/* Current Module */}
+            <div className={styles.section}>
+              <h2>Current Module</h2>
+              <div className={styles.moduleCard}>
+                <div className={styles.moduleInfo}>
+                  <h3>AI-Native Business Design</h3>
+                  <p>Learn to audit your organization's AI maturity</p>
+                </div>
+                <div className={styles.moduleProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{width: '65%'}}></div>
+                  </div>
+                  <span>65% Complete</span>
+                </div>
+                <Link href="/learn" className={styles.moduleBtn}>
+                  Continue →
                 </Link>
               </div>
             </div>
 
-            {/* Module Progress */}
-            <div className={styles.moduleProgress}>
-              <h3>Your Modules</h3>
-              <div className={styles.modulesList}>
-                {user.progress.modules.map(mod => (
-                  <div key={mod.id} className={styles.moduleItem}>
-                    <div className={styles.moduleInfo}>
-                      <div className={styles.moduleName}>{mod.name}</div>
-                      <div className={styles.moduleStatus}>
-                        <span className={`${styles.statusBadge} ${styles[mod.status]}`}>
-                          {mod.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles.moduleProgress}>
-                      <div className={styles.progressBar}>
-                        <div className={styles.progressFill} style={{width: `${mod.progress}%`}}></div>
-                      </div>
-                      <span>{mod.progress}%</span>
-                    </div>
+            {/* Quick Actions */}
+            <div className={styles.section}>
+              <h2>Continue Learning</h2>
+              <div className={styles.actionsGrid}>
+                <Link href="/learn" className={styles.actionCard}>
+                  <span className={styles.actionIcon}>🎯</span>
+                  <div>
+                    <h4>Practice Session</h4>
+                    <p>Apply what you've learned</p>
                   </div>
-                ))}
+                </Link>
+                <Link href="/content" className={styles.actionCard}>
+                  <span className={styles.actionIcon}>🎬</span>
+                  <div>
+                    <h4>Watch Content</h4>
+                    <p>Async video lessons</p>
+                  </div>
+                </Link>
+                <Link href="/live" className={styles.actionCard}>
+                  <span className={styles.actionIcon}>👥</span>
+                  <div>
+                    <h4>Join Live</h4>
+                    <p>Cohort sessions</p>
+                  </div>
+                </Link>
+                <Link href="/office-hours" className={styles.actionCard}>
+                  <span className={styles.actionIcon}>📅</span>
+                  <div>
+                    <h4>Book Office Hours</h4>
+                    <p>Expert coaching</p>
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -164,28 +203,22 @@ export default function Dashboard() {
         {/* Modules Tab */}
         {activeTab === 'modules' && (
           <div className={styles.content}>
-            <h2>All Modules</h2>
-            <div className={styles.modulesGrid}>
-              {user.progress.modules.map(mod => (
-                <div key={mod.id} className={styles.moduleCard}>
-                  <div className={styles.moduleCardHeader}>
-                    <span className={styles.moduleNumber}>0{mod.id}</span>
-                    <span className={`${styles.statusBadge} ${styles[mod.status]}`}>
-                      {mod.status}
+            <h2>Your Modules</h2>
+            <div className={styles.modulesList}>
+              {userData.progress.modules.map(module => (
+                <div key={module.id} className={styles.moduleItem}>
+                  <div className={styles.moduleNumber}>{module.id}</div>
+                  <div className={styles.moduleDetails}>
+                    <h3>{module.name}</h3>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{width: `${module.progress}%`}}></div>
+                    </div>
+                  </div>
+                  <div className={styles.moduleStatus}>
+                    <span className={`${styles.statusBadge} ${styles[module.status]}`}>
+                      {module.status === 'active' ? 'In Progress' : module.status === 'completed' ? 'Completed' : 'Locked'}
                     </span>
                   </div>
-                  <h3>{mod.name}</h3>
-                  <div className={styles.moduleProgress}>
-                    <div className={styles.progressBar}>
-                      <div className={styles.progressFill} style={{width: `${mod.progress}%`}}></div>
-                    </div>
-                    <span>{mod.progress}%</span>
-                  </div>
-                  {mod.status === 'active' && (
-                    <Link href="/learn" className={styles.btnSecondary}>
-                      Continue
-                    </Link>
-                  )}
                 </div>
               ))}
             </div>
@@ -195,37 +228,28 @@ export default function Dashboard() {
         {/* Sessions Tab */}
         {activeTab === 'sessions' && (
           <div className={styles.content}>
-            <h2>Learning Modes</h2>
-            <div className={styles.modesGrid}>
-              <div className={styles.modeCard}>
-                <div className={styles.modeIcon}>🤖</div>
-                <h3>AI Practice</h3>
-                <p>Solo AI sessions with personalized feedback</p>
-                <span className={styles.modeStatus}>Available Now</span>
+            <h2>Learning Sessions</h2>
+            <div className={styles.sessionsList}>
+              <div className={styles.sessionItem}>
+                <div className={styles.sessionIcon}>✅</div>
+                <div className={styles.sessionInfo}>
+                  <h3>Introduction to AI-Native Business</h3>
+                  <p>Completed on Feb 15, 2026</p>
+                </div>
               </div>
-              <div className={styles.modeCard}>
-                <div className={styles.modeIcon}>🎬</div>
-                <h3>Async Content</h3>
-                <p>Recorded practitioner lectures with annotations</p>
-                <span className={styles.modeStatus}>Coming Soon</span>
+              <div className={styles.sessionItem}>
+                <div className={styles.sessionIcon}>✅</div>
+                <div className={styles.sessionInfo}>
+                  <h3>Cognitive Profile Calibration</h3>
+                  <p>Completed on Feb 14, 2026</p>
+                </div>
               </div>
-              <div className={styles.modeCard}>
-                <div className={styles.modeIcon}>👥</div>
-                <h3>Live Cohort</h3>
-                <p>Small group (8-12) facilitated sessions</p>
-                <span className={styles.modeStatus}>Coming Soon</span>
-              </div>
-              <div className={styles.modeCard}>
-                <div className={styles.modeIcon}>💬</div>
-                <h3>Office Hours</h3>
-                <p>Drop-in Q&A with practitioners</p>
-                <span className={styles.modeStatus}>Coming Soon</span>
-              </div>
-              <div className={styles.modeCard}>
-                <div className={styles.modeIcon}>🎓</div>
-                <h3>1-2-1 Coaching</h3>
-                <p>Private sessions with senior practitioners</p>
-                <span className={styles.modeStatus}>Coming Soon</span>
+              <div className={styles.sessionItem}>
+                <div className={styles.sessionIcon}>📅</div>
+                <div className={styles.sessionInfo}>
+                  <h3>AI Practice: Double Loop Strategy</h3>
+                  <p>Scheduled for Feb 20, 2026</p>
+                </div>
               </div>
             </div>
           </div>
@@ -235,25 +259,25 @@ export default function Dashboard() {
         {activeTab === 'artefacts' && (
           <div className={styles.content}>
             <h2>Your Artefacts</h2>
-            <p className={styles.sectionDesc}>
-              Every module produces a concrete deliverable — not a certificate.
-            </p>
-            <div className={styles.artefactsList}>
-              {user.artefacts.map(art => (
-                <div key={art.id} className={styles.artefactCard}>
-                  <h3>{art.name}</h3>
+            <div className={styles.artefactsGrid}>
+              {userData.artefacts.map(artefact => (
+                <div key={artefact.id} className={styles.artefactCard}>
+                  <h3>{artefact.name}</h3>
                   <div className={styles.artefactStrength}>
-                    <span>Strength:</span>
-                    <div className={styles.strengthMeter}>
-                      <div className={styles.strengthFill} style={{width: `${art.strength}%`}}></div>
+                    <span>Strength: {artefact.strength}%</span>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{width: `${artefact.strength}%`}}></div>
                     </div>
-                    <span>{art.strength}%</span>
                   </div>
-                  <span className={`${styles.statusBadge} ${styles[art.status.replace('_', '')]}`}>
-                    {art.status.replace('_', ' ')}
-                  </span>
+                  <Link href="/artefact" className={styles.artefactBtn}>
+                    Continue Editing →
+                  </Link>
                 </div>
               ))}
+              <Link href="/artefact" className={styles.artefactNew}>
+                <span>+</span>
+                <p>Create New Artefact</p>
+              </Link>
             </div>
           </div>
         )}
@@ -263,18 +287,34 @@ export default function Dashboard() {
           <div className={styles.content}>
             <h2>Your Cognitive Profile</h2>
             <div className={styles.profileCard}>
-              <div className={styles.profileHeader}>
-                <div className={styles.avatar}>{user.name[0]}</div>
-                <div>
-                  <h3>{user.name}</h3>
-                  <p>{user.role}, {user.sector}</p>
-                </div>
+              <div className={styles.archetype}>
+                <span className={styles.archetypeIcon}>🧠</span>
+                <h3>{userData.archetype}</h3>
               </div>
-              <div className={styles.archetypeDisplay}>
-                <span>🎯</span>
-                <div>
-                  <div className={styles.archetypeTitle}>{user.archetype}</div>
-                  <div className={styles.archetypeDesc}>Your Cognitive Style</div>
+              <div className={styles.dimensions}>
+                <div className={styles.dimension}>
+                  <label>Strategic vs Operational</label>
+                  <div className={styles.dimensionBar}>
+                    <div style={{width: '85%'}}></div>
+                  </div>
+                </div>
+                <div className={styles.dimension}>
+                  <label>Conceptual vs Technical</label>
+                  <div className={styles.dimensionBar}>
+                    <div style={{width: '70%'}}></div>
+                  </div>
+                </div>
+                <div className={styles.dimension}>
+                  <label>Single vs Double Loop</label>
+                  <div className={styles.dimensionBar}>
+                    <div style={{width: '90%'}}></div>
+                  </div>
+                </div>
+                <div className={styles.dimension}>
+                  <label>Challenge vs Confirmation</label>
+                  <div className={styles.dimensionBar}>
+                    <div style={{width: '75%'}}></div>
+                  </div>
                 </div>
               </div>
             </div>

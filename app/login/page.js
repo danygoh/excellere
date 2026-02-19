@@ -3,98 +3,74 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useUser } from '../../context/UserContext'
+import styles from './auth.module.css'
 
 export default function Login() {
   const router = useRouter()
+  const { login } = useUser()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Demo: just redirect to dashboard
-    router.push('/dashboard')
+    setError('')
+    
+    if (!email || !password) {
+      setError('Please fill in all fields')
+      return
+    }
+
+    try {
+      await login(email, password)
+      router.push('/dashboard')
+    } catch (err) {
+      setError('Invalid credentials')
+    }
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#07080d',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px'
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '420px',
-        background: '#161b2e',
-        border: '1px solid rgba(255,255,255,0.06)',
-        borderRadius: '20px',
-        padding: '48px'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '8px' }}>✦</div>
-          <h1 style={{ fontFamily: 'Instrument Serif', fontSize: '1.75rem', marginBottom: '8px' }}>Welcome back</h1>
-          <p style={{ color: '#8b8fa3', fontSize: '0.9375rem' }}>Sign in to continue your learning</p>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div className={styles.logo}>✦</div>
+          <h1>Welcome back</h1>
+          <p>Sign in to continue your learning</p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: '#8b8fa3', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Email</label>
+          {error && <div className={styles.error}>{error}</div>}
+          
+          <div className={styles.formGroup}>
+            <label>Email</label>
             <input 
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@company.com"
               required
-              style={{
-                width: '100%',
-                padding: '14px 18px',
-                background: '#13162a',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '1rem'
-              }}
             />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: '#8b8fa3', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Password</label>
+          <div className={styles.formGroup}>
+            <label>Password</label>
             <input 
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              style={{
-                width: '100%',
-                padding: '14px 18px',
-                background: '#13162a',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: '12px',
-                color: '#fff',
-                fontSize: '1rem'
-              }}
             />
           </div>
 
-          <button type="submit" style={{
-            width: '100%',
-            padding: '14px',
-            background: '#e9b84c',
-            border: 'none',
-            borderRadius: '9999px',
-            color: '#07080d',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}>
+          <button type="submit" className={styles.btnPrimary}>
             Sign In
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '24px', color: '#8b8fa3', fontSize: '0.875rem' }}>
-          Don't have an account? <Link href="/signup" style={{ color: '#e9b84c', textDecoration: 'none' }}>Sign up</Link>
+        <div className={styles.footer}>
+          Don't have an account? <Link href="/signup">Sign up</Link>
         </div>
       </div>
     </div>
