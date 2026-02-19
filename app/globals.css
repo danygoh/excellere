@@ -30,9 +30,9 @@
   --warning: #f59e0b;
   
   /* Typography */
-  --font-display: 'DM Sans', -apple-system, sans-serif;  /* Headlines, UI, nav, buttons */
-  --font-body: 'Playfair Display', Georgia, serif;  /* Body text, reading passages */
-  --font-mono: 'JetBrains Mono', monospace;  /* Labels, tags, code */
+  --font-display: 'Syne', -apple-system, sans-serif;
+  --font-body: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
   
   /* Spacing */
   --space-xs: 4px;
@@ -69,7 +69,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body);  /* Lora for reading */
+  font-family: var(--font-display);  /* Lora for reading */
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.7;
