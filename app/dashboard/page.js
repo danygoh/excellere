@@ -1,192 +1,286 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import styles from './dashboard.module.css'
 
 export default function Dashboard() {
-  const modules = [
-    { id: 1, title: 'AI Fundamentals for Executives', progress: 100, status: 'completed' },
-    { id: 2, title: 'Strategic AI Adoption', progress: 75, status: 'in-progress' },
-    { id: 3, title: 'AI & Corporate Governance', progress: 0, status: 'locked' },
-    { id: 4, title: 'Building AI-Ready Teams', progress: 0, status: 'locked' },
-    { id: 5, title: 'AI & Financial Performance', progress: 0, status: 'locked' },
-    { id: 6, title: 'Customer Experience with AI', progress: 0, status: 'locked' },
-    { id: 7, title: 'Innovation & AI', progress: 0, status: 'locked' },
-    { id: 8, title: 'The AI-Ready Organisation', progress: 0, status: 'locked' }
-  ]
+  const [activeTab, setActiveTab] = useState('overview')
+
+  // Mock user data
+  const user = {
+    name: 'Sarah',
+    role: 'Head of Strategy',
+    sector: 'FinTech',
+    archetype: 'Strategic Reframer',
+    progress: {
+      overall: 35,
+      modules: [
+        { id: 1, name: 'AI-Native Business Design', progress: 65, status: 'active' },
+        { id: 2, name: 'Double Loop Strategy', progress: 20, status: 'locked' },
+        { id: 3, name: 'Agentic AI', progress: 0, status: 'locked' }
+      ]
+    },
+    sessions: 12,
+    artefacts: [
+      { id: 1, name: 'AI-Native Firm Audit', status: 'in_progress', strength: 45 }
+    ],
+    nextSession: {
+      type: 'AI Practice',
+      topic: 'AI-Native Design',
+      time: 'Today, 2:00 PM'
+    }
+  }
 
   return (
-    <main style={{ minHeight: '100vh', background: '#0D1117' }}>
-      {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 32px',
-        height: '64px',
-        background: 'rgba(13,17,23,0.95)',
-        borderBottom: '1px solid #1E2733'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              background: 'linear-gradient(135deg, #C8922A, #E8B84B)',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: "'DM Serif Display', serif",
-              fontSize: '16px',
-              color: '#0D1117'
-            }}>E</div>
-          </Link>
-          
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {['Dashboard', 'Courses', 'Coach', 'Live'].map((item, i) => (
-              <a key={i} href={item === 'Dashboard' ? '#' : `/${item.toLowerCase()}`} style={{
-                padding: '8px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: i === 0 ? '#fff' : '#8896A4',
-                background: i === 0 ? '#1E2733' : 'transparent',
-                textDecoration: 'none'
-              }}>{item}</a>
-            ))}
-          </div>
+    <div className={styles.container}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        <div className={styles.logo}>
+          <span>✦</span> Excellere
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #C8922A, #E8B84B)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '14px',
-            fontWeight: 600,
-            color: '#0D1117'
-          }}>DS</div>
+        <nav className={styles.nav}>
+          <button 
+            className={`${styles.navItem} ${activeTab === 'overview' ? styles.active : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <span>📊</span> Overview
+          </button>
+          <button 
+            className={`${styles.navItem} ${activeTab === 'modules' ? styles.active : ''}`}
+            onClick={() => setActiveTab('modules')}
+          >
+            <span>📚</span> Modules
+          </button>
+          <button 
+            className={`${styles.navItem} ${activeTab === 'sessions' ? styles.active : ''}`}
+            onClick={() => setActiveTab('sessions')}
+          >
+            <span>🎯</span> Sessions
+          </button>
+          <button 
+            className={`${styles.navItem} ${activeTab === 'artefacts' ? styles.active : ''}`}
+            onClick={() => setActiveTab('artefacts')}
+          >
+            <span>💎</span> Artefacts
+          </button>
+          <button 
+            className={`${styles.navItem} ${activeTab === 'profile' ? styles.active : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            <span>👤</span> Profile
+          </button>
+        </nav>
+
+        <div className={styles.sidebarFooter}>
+          <div className={styles.cognitiveBadge}>
+            <span>🧠</span>
+            <div>
+              <div className={styles.badgeTitle}>{user.archetype}</div>
+              <div className={styles.badgeSubtitle}>Your Cognitive Style</div>
+            </div>
+          </div>
         </div>
-      </nav>
+      </aside>
 
       {/* Main Content */}
-      <div style={{ paddingTop: '96px', padding: '96px 32px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        
-        {/* Welcome */}
-        <div style={{ marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '32px', marginBottom: '8px' }}>Welcome back, Daniel 👋</h1>
-          <p style={{ color: '#8896A4' }}>Continue your AI fluency journey</p>
-        </div>
-
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '40px' }}>
-          {[
-            { label: 'Modules Completed', value: '1/8', color: '#14B8A6' },
-            { label: 'Hours Learned', value: '2.5', color: '#fff' },
-            { label: 'Days Active', value: '3', color: '#fff' },
-            { label: 'Coach Sessions', value: '5', color: '#fff' }
-          ].map((stat, i) => (
-            <div key={i} style={{ background: '#0D1117', border: '1px solid #1E2733', borderRadius: '16px', padding: '24px' }}>
-              <div style={{ fontSize: '13px', color: '#8896A4', marginBottom: '8px' }}>{stat.label}</div>
-              <div style={{ fontSize: '28px', fontFamily: "'DM Serif Display', serif", color: stat.color }}>{stat.value}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Current Module */}
-        <div style={{ marginBottom: '40px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>Continue Learning</h2>
-          
-          <div style={{ 
-            background: 'linear-gradient(135deg, #1E2733 0%, #0D1117 100%)',
-            border: '1px solid #C8922A',
-            borderRadius: '20px',
-            padding: '32px',
-            display: 'flex',
-            gap: '24px',
-            alignItems: 'center'
-          }}>
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '16px',
-              background: 'rgba(200,146,42,0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '32px'
-            }}>🎯</div>
-            
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '14px', color: '#E8B84B', marginBottom: '8px' }}>Module 2 — In Progress</div>
-              <h3 style={{ fontSize: '22px', marginBottom: '12px' }}>Strategic AI Adoption</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ flex: 1, height: '6px', background: '#1E2733', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: '75%', height: '100%', background: '#E8B84B', borderRadius: '3px' }} />
-                </div>
-                <span style={{ fontSize: '14px', color: '#8896A4' }}>75%</span>
-              </div>
-            </div>
-            
-            <button className="btn btn-primary">Continue →</button>
+      <main className={styles.main}>
+        {/* Header */}
+        <header className={styles.header}>
+          <div>
+            <h1>Welcome back, {user.name}</h1>
+            <p>Continue your AI learning journey</p>
           </div>
-        </div>
+          <div className={styles.headerActions}>
+            <Link href="/learn" className={styles.btnPrimary}>
+              Continue Learning →
+            </Link>
+          </div>
+        </header>
 
-        {/* All Modules */}
-        <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>All Modules</h2>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {modules.map((mod, i) => (
-            <div key={mod.id} style={{
-              background: mod.status === 'in-progress' ? '#1E2733' : '#0D1117',
-              border: `1px solid ${mod.status === 'completed' ? '#14B8A6' : mod.status === 'in-progress' ? '#E8B84B' : '#1E2733'}`,
-              borderRadius: '12px',
-              padding: '20px 24px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px',
-              opacity: mod.status === 'locked' ? 0.5 : 1
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: mod.status === 'completed' ? '#14B8A6' : mod.status === 'in-progress' ? '#E8B84B' : '#1E2733',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px',
-                color: mod.status === 'completed' || mod.status === 'in-progress' ? '#0D1117' : '#8896A4'
-              }}>
-                {mod.status === 'completed' ? '✓' : mod.id}
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div className={styles.content}>
+            {/* Stats Grid */}
+            <div className={styles.statsGrid}>
+              <div className={styles.statCard}>
+                <div className={styles.statValue}>{user.progress.overall}%</div>
+                <div className={styles.statLabel}>Overall Progress</div>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{width: `${user.progress.overall}%`}}></div>
+                </div>
               </div>
-              
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 500, marginBottom: '4px' }}>{mod.title}</div>
-                {mod.status === 'in-progress' && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '4px', background: '#1E2733', borderRadius: '2px', overflow: 'hidden' }}>
-                      <div style={{ width: '75%', height: '100%', background: '#E8B84B', borderRadius: '2px' }} />
+              <div className={styles.statCard}>
+                <div className={styles.statValue}>{user.sessions}</div>
+                <div className={styles.statLabel}>Sessions Completed</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statValue}>{user.artefacts.length}</div>
+                <div className={styles.statLabel}>Artefacts In Progress</div>
+              </div>
+            </div>
+
+            {/* Next Session */}
+            <div className={styles.nextSession}>
+              <h3>Next Session</h3>
+              <div className={styles.sessionCard}>
+                <div className={styles.sessionType}>{user.nextSession.type}</div>
+                <div className={styles.sessionTopic}>{user.nextSession.topic}</div>
+                <div className={styles.sessionTime}>{user.nextSession.time}</div>
+                <Link href="/learn" className={styles.btnPrimary}>
+                  Start Now
+                </Link>
+              </div>
+            </div>
+
+            {/* Module Progress */}
+            <div className={styles.moduleProgress}>
+              <h3>Your Modules</h3>
+              <div className={styles.modulesList}>
+                {user.progress.modules.map(mod => (
+                  <div key={mod.id} className={styles.moduleItem}>
+                    <div className={styles.moduleInfo}>
+                      <div className={styles.moduleName}>{mod.name}</div>
+                      <div className={styles.moduleStatus}>
+                        <span className={`${styles.statusBadge} ${styles[mod.status]}`}>
+                          {mod.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.moduleProgress}>
+                      <div className={styles.progressBar}>
+                        <div className={styles.progressFill} style={{width: `${mod.progress}%`}}></div>
+                      </div>
+                      <span>{mod.progress}%</span>
                     </div>
                   </div>
-                )}
-              </div>
-              
-              <div style={{ fontSize: '14px', color: mod.status === 'completed' ? '#14B8A6' : mod.status === 'in-progress' ? '#E8B84B' : '#8896A4' }}>
-                {mod.status === 'completed' ? 'Completed' : mod.status === 'in-progress' ? 'In Progress' : 'Locked'}
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
 
-      </div>
-    </main>
+        {/* Modules Tab */}
+        {activeTab === 'modules' && (
+          <div className={styles.content}>
+            <h2>All Modules</h2>
+            <div className={styles.modulesGrid}>
+              {user.progress.modules.map(mod => (
+                <div key={mod.id} className={styles.moduleCard}>
+                  <div className={styles.moduleCardHeader}>
+                    <span className={styles.moduleNumber}>0{mod.id}</span>
+                    <span className={`${styles.statusBadge} ${styles[mod.status]}`}>
+                      {mod.status}
+                    </span>
+                  </div>
+                  <h3>{mod.name}</h3>
+                  <div className={styles.moduleProgress}>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{width: `${mod.progress}%`}}></div>
+                    </div>
+                    <span>{mod.progress}%</span>
+                  </div>
+                  {mod.status === 'active' && (
+                    <Link href="/learn" className={styles.btnSecondary}>
+                      Continue
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Sessions Tab */}
+        {activeTab === 'sessions' && (
+          <div className={styles.content}>
+            <h2>Learning Modes</h2>
+            <div className={styles.modesGrid}>
+              <div className={styles.modeCard}>
+                <div className={styles.modeIcon}>🤖</div>
+                <h3>AI Practice</h3>
+                <p>Solo AI sessions with personalized feedback</p>
+                <span className={styles.modeStatus}>Available Now</span>
+              </div>
+              <div className={styles.modeCard}>
+                <div className={styles.modeIcon}>🎬</div>
+                <h3>Async Content</h3>
+                <p>Recorded practitioner lectures with annotations</p>
+                <span className={styles.modeStatus}>Coming Soon</span>
+              </div>
+              <div className={styles.modeCard}>
+                <div className={styles.modeIcon}>👥</div>
+                <h3>Live Cohort</h3>
+                <p>Small group (8-12) facilitated sessions</p>
+                <span className={styles.modeStatus}>Coming Soon</span>
+              </div>
+              <div className={styles.modeCard}>
+                <div className={styles.modeIcon}>💬</div>
+                <h3>Office Hours</h3>
+                <p>Drop-in Q&A with practitioners</p>
+                <span className={styles.modeStatus}>Coming Soon</span>
+              </div>
+              <div className={styles.modeCard}>
+                <div className={styles.modeIcon}>🎓</div>
+                <h3>1-2-1 Coaching</h3>
+                <p>Private sessions with senior practitioners</p>
+                <span className={styles.modeStatus}>Coming Soon</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Artefacts Tab */}
+        {activeTab === 'artefacts' && (
+          <div className={styles.content}>
+            <h2>Your Artefacts</h2>
+            <p className={styles.sectionDesc}>
+              Every module produces a concrete deliverable — not a certificate.
+            </p>
+            <div className={styles.artefactsList}>
+              {user.artefacts.map(art => (
+                <div key={art.id} className={styles.artefactCard}>
+                  <h3>{art.name}</h3>
+                  <div className={styles.artefactStrength}>
+                    <span>Strength:</span>
+                    <div className={styles.strengthMeter}>
+                      <div className={styles.strengthFill} style={{width: `${art.strength}%`}}></div>
+                    </div>
+                    <span>{art.strength}%</span>
+                  </div>
+                  <span className={`${styles.statusBadge} ${styles[art.status.replace('_', '')]}`}>
+                    {art.status.replace('_', ' ')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <div className={styles.content}>
+            <h2>Your Cognitive Profile</h2>
+            <div className={styles.profileCard}>
+              <div className={styles.profileHeader}>
+                <div className={styles.avatar}>{user.name[0]}</div>
+                <div>
+                  <h3>{user.name}</h3>
+                  <p>{user.role}, {user.sector}</p>
+                </div>
+              </div>
+              <div className={styles.archetypeDisplay}>
+                <span>🎯</span>
+                <div>
+                  <div className={styles.archetypeTitle}>{user.archetype}</div>
+                  <div className={styles.archetypeDesc}>Your Cognitive Style</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
   )
 }

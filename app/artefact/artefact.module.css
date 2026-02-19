@@ -1,0 +1,244 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.backLink {
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.backLink:hover {
+  color: var(--accent-teal);
+}
+
+.artefactTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.btnPrimary, .btnSecondary, .btnAnalyze {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnPrimary {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: none;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+.btnAnalyze {
+  width: 100%;
+  background: var(--accent-teal);
+  color: var(--bg-primary);
+  border: none;
+  margin-top: var(--space-md);
+}
+
+.btnAnalyze:hover:not(:disabled) {
+  background: #25b8a8;
+}
+
+.btnAnalyze:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Main */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  height: calc(100vh - 65px);
+}
+
+.editor {
+  padding: var(--space-xl);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.editorInput {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.7;
+  resize: none;
+}
+
+.editorInput:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+/* Sidebar */
+.sidebar {
+  padding: var(--space-lg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.strengthCard, .suggestionsCard, .milestonesCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.strengthCard h3, .suggestionsCard h3, .milestonesCard h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.strengthMeter {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+}
+
+.strengthFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-teal));
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.strengthLabel {
+  text-align: right;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+/* Suggestions */
+.analyzing {
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+.animateIcon {
+  font-size: 2rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.noSuggestions {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+.suggestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.suggestion {
+  padding: var(--space-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.suggestionSection {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-teal);
+  margin-bottom: var(--space-xs);
+}
+
+.suggestionIssue {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.suggestionText {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* Milestones */
+.milestones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.milestoneDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+}
+
+.milestone.pending {
+  color: var(--text-tertiary);
+}
+
+.milestone.pending .milestoneDot {
+  background: var(--bg-tertiary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    border-top: 1px solid var(--border-subtle);
+  }
+}
