@@ -1,4 +1,5 @@
 import './globals.css'
+import { UserProvider } from '../context/UserContext'
 
 export const metadata = {
   title: 'Excellere — AI-Native Learning for Leaders',
@@ -17,7 +18,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        {children}
+        <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   )
