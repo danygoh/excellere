@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './onboarding.module.css'
 
@@ -309,7 +309,7 @@ function IdentityStep({ formData, setFormData, onNext }) {
 function ScanningStep({ formData, setProfile, isLoading, setIsLoading, onNext }) {
   const [scanProgress, setScanProgress] = useState(0)
 
-  useState(() => {
+  useEffect(() => {
     if (isLoading) {
       // Simulate scanning animation
       const interval = setInterval(() => {
