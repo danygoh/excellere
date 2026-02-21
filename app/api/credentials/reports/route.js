@@ -40,6 +40,7 @@ function evaluateBadges(sessionHistory, artefactScores) {
 }
 
 export async function POST(request) {
+  console.log('API called, ANTHROPIC_API_KEY present:', !!process.env.ANTHROPIC_API_KEY);
   try {
     const { profile_id } = await request.json();
     
