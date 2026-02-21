@@ -31,11 +31,19 @@ export default function CredentialTest() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile_id: profileId })
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        setError(`Server error: ${text.substring(0, 100)}`);
+        setLoading(false);
+        return;
+      }
       if (data.success) {
         setResult(data);
       } else {
-        setError(data.error);
+        setError(data.error || 'Unknown error');
       }
     } catch (e) {
       setError(e.message);
