@@ -17,103 +17,77 @@ export default async function ValidatorDashboard({ searchParams }) {
   const validator = validators.find(v => v.id === validatorId);
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '40px' }}>
-        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, letterSpacing: '4px', marginBottom: '8px', color: '#e2e8f0' }}>EXCELLERE</div>
-        <h1 style={{ fontSize: '24px', marginBottom: '8px', color: '#e2e8f0' }}>Validator Dashboard</h1>
-        <p style={{ color: '#94a3b8' }}>Review and validate learner assessment reports</p>
-      </div>
+    <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <span style={{ fontSize: '14px', letterSpacing: '8px', color: '#d4af37' }}>✦</span>
+          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 400, color: '#fff', letterSpacing: '6px', marginTop: '10px' }}>VALIDATOR</div>
+          <p style={{ color: '#666', marginTop: '20px', fontSize: '14px' }}>Review and validate learner assessment reports</p>
+        </div>
 
-      {/* Validator Selection */}
-      {!validatorId ? (
-        <div>
-          <p style={{ marginBottom: '20px', fontSize: '14px', color: '#94a3b8' }}>Select your identity to access the validation queue:</p>
+        {!validatorId ? (
+          /* Validator Selection */
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
             {validators.map(v => (
-              <a 
-                key={v.id}
-                href={`/validate?validator=${v.id}`}
-                style={{ 
-                  display: 'block',
-                  background: '#1e293b', 
-                  padding: '24px', 
-                  borderRadius: '12px', 
-                  textDecoration: 'none',
-                  color: '#e2e8f0',
-                  border: '1px solid #334155',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  textAlign: 'center'
-                }}
-              >
-                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#334155', color: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600, margin: '0 auto 16px' }}>
+              <a key={v.id} href={`/validate?validator=${v.id}`} style={{ display: 'block', background: '#0a0a0a', border: '1px solid #222', padding: '40px', textDecoration: 'none', textAlign: 'center' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#1a1a1a', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 600, margin: '0 auto 16px', fontFamily: 'Playfair Display, serif' }}>
                   {v.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <div style={{ fontWeight: 600, fontSize: '16px' }}>{v.name}</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>{v.title}</div>
+                <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', color: '#fff' }}>{v.name}</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>{v.title}</div>
               </a>
             ))}
           </div>
-        </div>
-      ) : (
-        <div>
-          <a href="/validate" style={{ display: 'inline-block', marginBottom: '20px', color: '#64748b', textDecoration: 'none', fontSize: '14px' }}>← Select different validator</a>
-          
-          {/* Validator Info */}
-          <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '24px', borderRadius: '12px', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#10b981', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600 }}>
-              {validator.name.split(' ').map(n => n[0]).join('')}
+        ) : (
+          /* Dashboard */
+          <div>
+            <a href="/validate" style={{ display: 'inline-block', color: '#666', textDecoration: 'none', fontSize: '12px', marginBottom: '30px' }}>← Select validator</a>
+            
+            {/* Info */}
+            <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px', display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#d4af37', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600, fontFamily: 'Playfair Display, serif' }}>
+                {validator.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#fff' }}>{validator.name}</div>
+                <div style={{ color: '#666', fontSize: '12px' }}>{validator.title}</div>
+              </div>
+              <div style={{ marginLeft: 'auto', background: '#1a1a1a', color: '#d4af37', padding: '8px 16px', fontSize: '11px', letterSpacing: '1px' }}>
+                {pendingReports.length} PENDING
+              </div>
             </div>
-            <div>
-              <div style={{ fontSize: '20px', fontWeight: 600, color: '#e2e8f0' }}>{validator.name}</div>
-              <div style={{ fontSize: '14px', color: '#94a3b8' }}>{validator.title}</div>
-            </div>
-            <div style={{ marginLeft: 'auto', background: '#134e4a', color: '#10b981', padding: '8px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>
-              {pendingReports.length} reports pending
-            </div>
-          </div>
 
-          {/* Queue */}
-          <h2 style={{ fontSize: '18px', marginBottom: '20px', color: '#e2e8f0' }}>Reports Awaiting Validation</h2>
-          
-          {pendingReports.length === 0 ? (
-            <p style={{ color: '#94a3b8', textAlign: 'center', padding: '40px' }}>No reports pending validation.</p>
-          ) : (
+            {/* Queue */}
+            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', marginBottom: '20px' }}>Reports Awaiting Validation</h2>
+            
             <div style={{ display: 'grid', gap: '16px' }}>
               {pendingReports.map(report => (
-                <div key={report.id} style={{ background: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                <div key={report.id} style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '18px', color: '#e2e8f0' }}>{report.learner_name}</div>
-                      <div style={{ fontSize: '14px', color: '#94a3b8' }}>{report.role}</div>
+                      <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff' }}>{report.learner_name}</div>
+                      <div style={{ color: '#666', fontSize: '12px' }}>{report.role}</div>
                     </div>
-                    <span style={{ background: '#f59e0b', color: '#fff', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 500 }}>
-                      Pending
-                    </span>
+                    <span style={{ background: '#d4af37', color: '#000', padding: '4px 12px', fontSize: '10px', letterSpacing: '1px' }}>PENDING</span>
                   </div>
-                  
-                  <div style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '16px' }}>
-                    <strong>Module:</strong> {report.module}<br/>
-                    <strong>Submitted:</strong> {report.submitted_at}
+                  <div style={{ color: '#444', fontSize: '12px', marginBottom: '16px' }}>
+                    <strong style={{ color: '#666' }}>Module:</strong> {report.module}<br/>
+                    <strong style={{ color: '#666' }}>Submitted:</strong> {report.submitted_at}
                   </div>
-                  
-                  <div style={{ background: '#0f172a', padding: '12px', borderRadius: '8px', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic', color: '#94a3b8' }}>
+                  <div style={{ background: '#1a1a1a', padding: '12px', fontSize: '13px', fontStyle: 'italic', color: '#666', marginBottom: '16px' }}>
                     "{report.report_summary}"
                   </div>
-                  
-                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#10b981', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
-                    Review & Validate →
+                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#d4af37', color: '#000', padding: '12px 24px', textDecoration: 'none', fontSize: '11px', fontWeight: 600, letterSpacing: '1px' }}>
+                    REVIEW & VALIDATE →
                   </a>
                 </div>
               ))}
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Instructions */}
-      <div style={{ marginTop: '40px', padding: '20px', background: '#134e4a', borderRadius: '8px', fontSize: '14px', color: '#e2e8f0' }}>
-        <strong>Important:</strong> When validating a report, you must write a personal 2-4 sentence comment about the learner's progress. This comment appears permanently on their credential and cannot be auto-generated.
       </div>
     </div>
   );

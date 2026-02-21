@@ -7,26 +7,20 @@ export default function CredentialTest() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    loadProfiles();
-  }, []);
+  useEffect(() => { loadProfiles(); }, []);
 
   const loadProfiles = async () => {
     setLoading(true);
-    setError(null);
     try {
       const res = await fetch('/api/credentials/reports');
       const data = await res.json();
       setProfiles(data.profiles);
-    } catch (e) {
-      setError(e.message);
-    }
+    } catch (e) { setError(e.message); }
     setLoading(false);
   };
 
   const generateReport = async (profileId) => {
     setLoading(true);
-    setError(null);
     setResult(null);
     try {
       const res = await fetch('/api/credentials/reports', {
@@ -36,127 +30,82 @@ export default function CredentialTest() {
       });
       const text = await res.text();
       let data;
-      try {
-        data = JSON.parse(text);
-      } catch (parseError) {
-        setError(`Server error: ${text.substring(0, 100)}`);
-        setLoading(false);
-        return;
-      }
-      if (data.success) {
-        setResult(data);
-      } else {
-        setError(data.error || 'Unknown error');
-      }
-    } catch (e) {
-      setError(e.message);
-    }
+      try { data = JSON.parse(text); } 
+      catch { setError('Server error'); setLoading(false); return; }
+      if (data.success) setResult(data);
+      else setError(data.error);
+    } catch (e) { setError(e.message); }
     setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
-      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '10px', color: '#e2e8f0' }}>
-        🎓 Excellere Credential System - Test
-      </h1>
-      <p style={{ color: '#94a3b8', marginBottom: '30px' }}>
-        Test the "What Aria Noticed" section with five real profiles.
-      </p>
-
-      {loading && <p style={{ color: '#94a3b8' }}>Loading...</p>}
-      {error && <p style={{ color: '#ef4444', background: '#1e293b', padding: '12px', borderRadius: '6px' }}>{error}</p>}
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginTop: '30px' }}>
-        {profiles.map(p => (
-          <div key={p.id} style={{
-            background: '#1e293b', padding: '24px', borderRadius: '12px',
-            border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-          }}>
-            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', marginBottom: '4px', color: '#e2e8f0' }}>{p.name}</h3>
-            <p style={{ color: '#10b981', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{p.role}</p>
-            <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '12px' }}>{p.sector}</p>
-            <span style={{
-              background: '#334155', color: '#e2e8f0', padding: '6px 14px', borderRadius: '20px',
-              fontSize: '11px', fontWeight: '500', display: 'inline-block'
-            }}>
-              {p.archetype}
-            </span>
-            <button 
-              onClick={() => generateReport(p.id)}
-              style={{
-                display: 'block', width: '100%', marginTop: '16px',
-                background: '#10b981', color: '#fff', border: 'none',
-                padding: '10px', borderRadius: '6px', fontSize: '13px',
-                cursor: 'pointer'
-              }}
-            >
-              Generate Report
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {result && (
-        <div style={{ marginTop: '40px', background: '#1e293b', padding: '30px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px', color: '#e2e8f0' }}>{result.report?.report_title || 'Report'}</h2>
-            <span style={{ background: '#10b981', color: '#fff', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
-              Score: {result.report?.overall_score || 'N/A'}
-            </span>
-          </div>
-
-          <div style={{
-            background: '#134e4a', borderLeft: '4px solid #10b981', padding: '24px', margin: '20px 0'
-          }}>
-            <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#10b981', marginBottom: '12px' }}>
-              What Aria Noticed
-            </div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6', color: '#e2e8f0' }}>
-              {result.report?.aria_noticed?.observation || 'No observation'}
-            </div>
-            <div style={{ marginTop: '16px', fontSize: '14px', color: '#94a3b8', fontStyle: 'italic' }}>
-              {result.report?.aria_noticed?.prediction || ''}
-            </div>
-          </div>
-
-          <p style={{ color: '#e2e8f0' }}><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
-          
-          {result.badges_earned && result.badges_earned.length > 0 && (
-            <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {result.badges_earned.map(b => (
-                <span key={b} style={{ background: '#334155', color: '#e2e8f0', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
-                  {b}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <p style={{ marginTop: '20px', fontSize: '13px', color: '#64748b' }}>
-            <strong>Share slug:</strong> {result.share_slug}
-          </p>
-          
-          {result.public_url && (
-            <div style={{ marginTop: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <a 
-                href={result.public_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{ display: 'inline-block', background: '#10b981', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
-              >
-                View Public Credential →
-              </a>
-              <a 
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app' + result.public_url)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: 'inline-block', background: '#0077b5', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
-              >
-                Share on LinkedIn
-              </a>
-            </div>
-          )}
+    <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <span style={{ fontSize: '14px', letterSpacing: '8px', color: '#d4af37' }}>✦</span>
+          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 400, color: '#fff', letterSpacing: '6px', marginTop: '10px' }}>CREDENTIAL TEST</div>
         </div>
-      )}
+
+        {loading && <p style={{ textAlign: 'center', color: '#666' }}>Loading...</p>}
+        {error && <p style={{ textAlign: 'center', color: '#c00', background: '#1a1a1a', padding: '12px' }}>{error}</p>}
+
+        {/* Profiles Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+          {profiles.map(p => (
+            <div key={p.id} style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px', textAlign: 'center' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#1a1a1a', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 600, margin: '0 auto 16px', fontFamily: 'Playfair Display, serif' }}>
+                {p.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', marginBottom: '4px' }}>{p.name}</h3>
+              <p style={{ color: '#d4af37', fontSize: '12px', letterSpacing: '1px', marginBottom: '4px' }}>{p.role}</p>
+              <p style={{ color: '#444', fontSize: '11px', marginBottom: '12px' }}>{p.sector}</p>
+              <span style={{ background: '#1a1a1a', color: '#888', padding: '4px 12px', fontSize: '10px', letterSpacing: '1px' }}>{p.archetype}</span>
+              <button onClick={() => generateReport(p.id)} style={{ display: 'block', width: '100%', marginTop: '16px', background: '#d4af37', color: '#000', border: 'none', padding: '12px', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer' }}>
+                GENERATE REPORT
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Result */}
+        {result && (
+          <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '40px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+              <span style={{ color: '#d4af37', fontSize: '12px', letterSpacing: '3px' }}>ASSESSMENT REPORT</span>
+              <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '24px', color: '#fff', marginTop: '10px' }}>{result.report?.report_title}</h2>
+            </div>
+
+            {/* Aria Noticed */}
+            <div style={{ borderTop: '1px solid #222', borderBottom: '1px solid #222', padding: '30px 0', margin: '20px 0' }}>
+              <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>What Aria Noticed</p>
+              <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', fontStyle: 'italic', lineHeight: 1.7 }}>
+                "{result.report?.aria_noticed?.observation}"
+              </p>
+            </div>
+
+            {/* Score */}
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+              <span style={{ color: '#d4af37', fontSize: '10px', letterSpacing: '3px' }}>OVERALL SCORE</span>
+              <div style={{ fontSize: '48px', fontWeight: 600, color: '#d4af37', marginTop: '10px' }}>{result.report?.overall_score}</div>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {result.public_url && (
+                <a href={result.public_url} target="_blank" style={{ background: '#d4af37', color: '#000', padding: '14px 28px', textDecoration: 'none', fontSize: '12px', fontWeight: 600, letterSpacing: '1px' }}>
+                  VIEW CREDENTIAL →
+                </a>
+              )}
+              <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app' + result.public_url)}`} target="_blank" style={{ background: '#1a1a1a', color: '#fff', padding: '14px 28px', textDecoration: 'none', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', border: '1px solid #333' }}>
+                LINKEDIN
+              </a>
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }

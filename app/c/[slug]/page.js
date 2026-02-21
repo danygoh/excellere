@@ -52,68 +52,89 @@ export default async function CredentialPage({ params }) {
   const { report, validated, validator, share_slug } = credential;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
-      {/* Card */}
-      <div style={{ background: '#1e293b', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', overflow: 'hidden', border: '1px solid #334155' }}>
+    <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ maxWidth: '700px', margin: '0 auto' }}>
         
-        {/* Header */}
-        <div style={{ background: '#0f172a', padding: '20px 30px', borderBottom: '1px solid #334155' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, letterSpacing: '4px', color: '#e2e8f0' }}>EXCELLERE</div>
-            <div style={{ background: '#10b981', color: '#fff', padding: '6px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 500 }}>✓ Verified Credential</div>
-          </div>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <span style={{ fontSize: '14px', letterSpacing: '8px', color: '#d4af37' }}>✦</span>
+          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '32px', fontWeight: 400, color: '#fff', letterSpacing: '6px', marginTop: '10px' }}>EXCELLERE</div>
         </div>
 
-        {/* Content */}
-        <div style={{ padding: '30px' }}>
-          {/* Hero */}
+        {/* Main Card */}
+        <div style={{ background: '#0a0a0a', border: '1px solid #222', borderRadius: '2px', padding: '50px' }}>
+          
+          {/* Verified Badge */}
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <span style={{ color: '#d4af37', fontSize: '12px', letterSpacing: '3px' }}>✓ VERIFIED CREDENTIAL</span>
+          </div>
+
+          {/* Avatar */}
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#334155', color: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', fontWeight: 600, margin: '0 auto 16px', border: '2px solid #10b981' }}>
+            <div style={{ 
+              width: '100px', height: '100px', borderRadius: '50%', 
+              background: 'linear-gradient(135deg, #d4af37 0%, #b8962e 100%)', 
+              color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontSize: '36px', fontWeight: 600, margin: '0 auto', fontFamily: 'Playfair Display, serif'
+            }}>
               {profile.first_name[0]}{profile.last_name[0]}
             </div>
-            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '8px', color: '#f1f5f9' }}>{profile.first_name} {profile.last_name}</h1>
-            <p style={{ color: '#10b981', fontWeight: 500, marginBottom: '4px' }}>{profile.role}</p>
-            <p style={{ color: '#94a3b8', fontSize: '14px' }}>{profile.sector} · AI Leadership Credential</p>
+          </div>
+
+          {/* Name & Role */}
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '36px', fontWeight: 400, color: '#fff', marginBottom: '8px' }}>
+              {profile.first_name} {profile.last_name}
+            </h1>
+            <p style={{ color: '#d4af37', fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase' }}>{profile.role}</p>
+            <p style={{ color: '#666', fontSize: '12px', marginTop: '4px' }}>{profile.sector}</p>
           </div>
 
           {/* Archetype */}
-          <div style={{ background: '#0f172a', padding: '20px', borderRadius: '12px', textAlign: 'center', marginBottom: '24px', border: '1px solid #334155' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>Thinking Archetype</div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#e2e8f0' }}>{profile.archetype}</div>
+          <div style={{ textAlign: 'center', marginTop: '30px', padding: '20px', borderTop: '1px solid #222', borderBottom: '1px solid #222' }}>
+            <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '8px' }}>Thinking Archetype</p>
+            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#fff', fontStyle: 'italic' }}>{profile.archetype}</p>
           </div>
 
-          {/* Aria Noticed */}
-          <div style={{ background: '#134e4a', borderLeft: '4px solid #10b981', padding: '20px', marginBottom: '24px', borderRadius: '0 8px 8px 0' }}>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#10b981', marginBottom: '10px' }}>What Aria Noticed</div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', fontStyle: 'italic', lineHeight: 1.6, color: '#e2e8f0' }}>{report.aria_noticed.observation}</div>
+          {/* What Aria Noticed */}
+          <div style={{ marginTop: '40px' }}>
+            <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>What Aria Noticed</p>
+            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', fontStyle: 'italic', lineHeight: 1.7 }}>
+              "{report.aria_noticed.observation}"
+            </p>
           </div>
 
           {/* Score */}
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '4px solid #10b981', display: 'inline-flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <span style={{ fontSize: '28px', fontWeight: 700, color: '#10b981' }}>{report.overall_score}</span>
-              <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', color: '#64748b' }}>Score</span>
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <div style={{ display: 'inline-block' }}>
+              <div style={{ 
+                width: '80px', height: '80px', borderRadius: '50%', 
+                border: '2px solid #d4af37', display: 'flex', flexDirection: 'column', 
+                justifyContent: 'center', alignItems: 'center' 
+              }}>
+                <span style={{ fontSize: '28px', fontWeight: 600, color: '#d4af37' }}>{report.overall_score}</span>
+                <span style={{ fontSize: '8px', color: '#666', letterSpacing: '2px' }}>SCORE</span>
+              </div>
             </div>
           </div>
 
           {/* Validator */}
           {validated && validator && (
-            <div style={{ background: '#0f172a', padding: '20px', borderRadius: '12px', textAlign: 'center', marginBottom: '20px', border: '1px solid #334155' }}>
-              <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '12px' }}>Validated By</div>
-              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', fontWeight: 600, color: '#e2e8f0' }}>{validator.name}</div>
-              <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '10px' }}>{validator.title}</div>
-              {validator.comment && (
-                <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '14px', fontStyle: 'italic', color: '#10b981' }}>"{validator.comment}"</div>
-              )}
+            <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: '1px solid #222', textAlign: 'center' }}>
+              <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>Validated by</p>
+              <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', color: '#fff' }}>{validator.name}</p>
+              <p style={{ color: '#666', fontSize: '11px', marginTop: '4px' }}>{validator.title}</p>
+              <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '14px', color: '#d4af37', fontStyle: 'italic', marginTop: '12px' }}>"{validator.comment}"</p>
             </div>
           )}
+
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '20px', borderTop: '1px solid #334155', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
-          <p>This credential was issued by Excellere</p>
-          <p style={{ marginTop: '4px' }}>Credential ID: EXC-{share_slug.split('-').pop().toUpperCase()}</p>
+        <div style={{ textAlign: 'center', marginTop: '30px', color: '#444', fontSize: '10px', letterSpacing: '2px' }}>
+          CREDENTIAL ID: EXC-{share_slug.split('-').pop().toUpperCase()} • EXCELLERE.AI
         </div>
+
       </div>
     </div>
   );

@@ -23,112 +23,108 @@ const fullCredentials = {
 export default async function FullCredentialPage({ params }) {
   const id = params.id;
   const credential = fullCredentials[id] || fullCredentials['sarah-chen'];
-
-  if (!credential) {
-    notFound();
-  }
+  if (!credential) notFound();
 
   const { learner, archetype, modules, badges, capability_statement, validators } = credential;
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
-      {/* Card */}
-      <div style={{ background: '#1e293b', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', overflow: 'hidden', border: '1px solid #334155' }}>
+    <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         
-        {/* Header */}
-        <div style={{ background: '#0f172a', borderBottom: '1px solid #334155', padding: '20px 30px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, letterSpacing: '4px', color: '#e2e8f0' }}>EXCELLERE</div>
-            <div style={{ background: '#10b981', color: '#fff', padding: '8px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>✓ Programme Complete</div>
-          </div>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <span style={{ fontSize: '14px', letterSpacing: '8px', color: '#d4af37' }}>✦</span>
+          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '32px', fontWeight: 400, color: '#fff', letterSpacing: '6px', marginTop: '10px' }}>EXCELLERE</div>
         </div>
 
-        {/* Content */}
-        <div style={{ padding: '30px' }}>
-          {/* Hero */}
+        {/* Card */}
+        <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '50px' }}>
+          
+          {/* Badge */}
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <span style={{ color: '#d4af37', fontSize: '12px', letterSpacing: '3px' }}>✓ PROGRAMME COMPLETE</span>
+          </div>
+
+          {/* Avatar */}
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#334155', color: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', fontWeight: 600, margin: '0 auto 20px', border: '2px solid #10b981' }}>
+            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, #d4af37 0%, #b8962e 100%)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', fontWeight: 600, margin: '0 auto', fontFamily: 'Playfair Display, serif' }}>
               {learner.first_name[0]}{learner.last_name[0]}
             </div>
-            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '32px', marginBottom: '8px', color: '#f1f5f9' }}>{learner.first_name} {learner.last_name}</h1>
-            <p style={{ color: '#10b981', fontWeight: 500, marginBottom: '4px' }}>{learner.role}</p>
-            <p style={{ color: '#64748b', fontSize: '14px' }}>{learner.sector}</p>
+          </div>
+
+          {/* Name */}
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '36px', fontWeight: 400, color: '#fff', marginBottom: '8px' }}>{learner.first_name} {learner.last_name}</h1>
+            <p style={{ color: '#d4af37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>{learner.role}</p>
+            <p style={{ color: '#444', fontSize: '11px', marginTop: '4px' }}>{learner.sector}</p>
           </div>
 
           {/* Archetype */}
-          <div style={{ background: '#0f172a', border: '1px solid #334155', padding: '20px', borderRadius: '12px', textAlign: 'center', marginBottom: '24px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>Thinking Archetype</div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#e2e8f0' }}>{archetype}</div>
+          <div style={{ textAlign: 'center', marginTop: '30px', padding: '20px', borderTop: '1px solid #222', borderBottom: '1px solid #222' }}>
+            <p style={{ color: '#444', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '8px' }}>Thinking Archetype</p>
+            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#fff', fontStyle: 'italic' }}>{archetype}</p>
           </div>
 
           {/* Modules */}
-          <div style={{ marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '16px' }}>Completed Modules</h2>
-            <div style={{ display: 'grid', gap: '12px' }}>
-              {modules.map((m, i) => (
-                <div key={i} style={{ background: '#0f172a', padding: '16px 20px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #334155' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{m.name}</div>
-                    <div style={{ fontSize: '12px', color: '#64748b' }}>Validated by {m.validator}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '20px', fontWeight: 700, color: '#10b981' }}>{m.score}</div>
-                    <div style={{ fontSize: '10px', color: '#64748b' }}>{m.completed}</div>
-                  </div>
+          <div style={{ marginTop: '40px' }}>
+            <p style={{ color: '#444', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '16px' }}>Completed Modules</p>
+            {modules.map((m, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid #1a1a1a' }}>
+                <div>
+                  <p style={{ color: '#fff', fontSize: '14px' }}>{m.name}</p>
+                  <p style={{ color: '#444', fontSize: '11px' }}>Validated by {m.validator}</p>
                 </div>
-              ))}
-            </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ color: '#d4af37', fontSize: '20px', fontWeight: 600 }}>{m.score}</p>
+                  <p style={{ color: '#333', fontSize: '10px' }}>{m.completed}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Badges */}
-          <div style={{ marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '16px' }}>Badges Earned</h2>
+          <div style={{ marginTop: '30px' }}>
+            <p style={{ color: '#444', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>Badges</p>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {badges.map((b, i) => (
-                <span key={i} style={{ background: '#334155', color: '#e2e8f0', padding: '8px 16px', borderRadius: '20px', fontSize: '13px' }}>{b}</span>
+                <span key={i} style={{ background: '#1a1a1a', color: '#888', padding: '6px 14px', fontSize: '11px', letterSpacing: '1px' }}>{b}</span>
               ))}
             </div>
           </div>
 
-          {/* Capability Statement */}
-          <div style={{ background: '#134e4a', borderLeft: '4px solid #10b981', padding: '20px', marginBottom: '24px', borderRadius: '0 8px 8px 0' }}>
-            <div style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#10b981', marginBottom: '12px' }}>Capability Statement</div>
-            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', fontStyle: 'italic', lineHeight: 1.7, color: '#e2e8f0' }}>{capability_statement}</p>
+          {/* Capability */}
+          <div style={{ marginTop: '30px', padding: '20px', background: '#0f0f0f', borderLeft: '2px solid #d4af37' }}>
+            <p style={{ color: '#444', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '8px' }}>Capability Statement</p>
+            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '14px', color: '#fff', fontStyle: 'italic', lineHeight: 1.7 }}>{capability_statement}</p>
           </div>
 
           {/* Validators */}
-          <div style={{ marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '16px' }}>Validated By</h2>
-            <div style={{ display: 'grid', gap: '12px' }}>
-              {validators.map((v, i) => (
-                <div key={i} style={{ background: '#0f172a', padding: '16px', borderRadius: '8px', border: '1px solid #334155' }}>
-                  <div style={{ fontWeight: 600, color: '#e2e8f0' }}>{v.name}</div>
-                  <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>{v.title}</div>
-                  <p style={{ fontSize: '14px', fontStyle: 'italic', color: '#10b981' }}>"{v.comment}"</p>
-                </div>
-              ))}
-            </div>
+          <div style={{ marginTop: '30px' }}>
+            <p style={{ color: '#444', fontSize: '10px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>Validated By</p>
+            {validators.map((v, i) => (
+              <div key={i} style={{ padding: '16px 0', borderBottom: '1px solid #1a1a1a' }}>
+                <p style={{ color: '#fff', fontSize: '14px' }}>{v.name}</p>
+                <p style={{ color: '#444', fontSize: '11px' }}>{v.title}</p>
+                <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '12px', color: '#d4af37', fontStyle: 'italic', marginTop: '4px' }}>"{v.comment}"</p>
+              </div>
+            ))}
           </div>
 
           {/* Share */}
-          <div style={{ textAlign: 'center', padding: '24px', borderTop: '1px solid #334155' }}>
-            <p style={{ marginBottom: '16px', color: '#94a3b8' }}>Share your credential</p>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app/credentials/' + id)}`} target="_blank" rel="noopener" style={{ background: '#0077b5', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px' }}>
-                Share on LinkedIn
-              </a>
-              <span style={{ background: '#334155', color: '#64748b', padding: '12px 24px, borderRadius: 6px, fontSize: 14px }}>
-                PDF Download (Coming Soon)
-              </span>
-            </div>
+          <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '30px', borderTop: '1px solid #222' }}>
+            <p style={{ color: '#444', fontSize: '11px', marginBottom: '16px' }}>Share your credential</p>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app/credentials/' + id)}`} target="_blank" style={{ background: '#d4af37', color: '#000', padding: '14px 28px', textDecoration: 'none', fontSize: '11px', fontWeight: 600, letterSpacing: '1px' }}>
+              LINKEDIN
+            </a>
           </div>
+
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '20px', borderTop: '1px solid #334155', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
-          <p>Credential ID: EXC-2026-{learner.first_name.toUpperCase()}{learner.last_name.toUpperCase()}</p>
-          <p style={{ marginTop: '8px' }}>Verified at excellere.ai/credentials/{id}</p>
+        <div style={{ textAlign: 'center', marginTop: '30px', color: '#333', fontSize: '10px', letterSpacing: '2px' }}>
+          CREDENTIAL ID: EXC-2026-{learner.first_name.toUpperCase()}{learner.last_name.toUpperCase()} • EXCELLERE.AI
         </div>
+
       </div>
     </div>
   );
