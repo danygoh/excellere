@@ -48,9 +48,12 @@ export async function POST(request) {
       overall_score: scores[profile_id] || 75
     };
     
+    const shareSlug = `${profile.first_name.toLowerCase()}-${profile.last_name.toLowerCase()}-${Math.random().toString(36).substring(2, 7)}`;
+    
     return NextResponse.json({
       success: true,
-      share_slug: `${profile.first_name.toLowerCase()}-${profile.last_name.toLowerCase()}-${Math.random().toString(36).substring(2, 7)}`,
+      share_slug: shareSlug,
+      public_url: `/c/${shareSlug}`,
       report
     });
     
