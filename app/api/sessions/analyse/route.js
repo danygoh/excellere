@@ -52,7 +52,7 @@ Return valid JSON only.`;
     const userPrompt = `
 Learner:
 - Name: ${userProfile.firstName || 'Learner'}
-- Role: ${userProfile.role || 'professional'} at a ${userProfile.sector || ' organisation}
+- Role: ${userProfile.role || 'professional'} at a ${userProfile.sector || 'organisation'}
 - Archetype: ${userProfile.archetype || 'Learner'}
 - Technical depth: ${userProfile.dimensions?.conceptual_vs_technical || 50}/100
 - Double-loop tendency: ${userProfile.dimensions?.single_vs_double_loop || 50}/100
