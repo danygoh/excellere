@@ -126,9 +126,9 @@ export default async function ValidatorDashboard({ searchParams }) {
                     "{report.report_summary}"
                   </div>
                   
-                  <button style={{ background: '#e94560', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
+                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#e94560', color: 'white', padding: '12px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: 500, textDecoration: 'none' }}>
                     Review & Validate →
-                  </button>
+                  </a>
                 </div>
               ))}
             </div>

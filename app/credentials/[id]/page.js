@@ -108,12 +108,12 @@ export default async function FullCredentialPage({ params }) {
       <div style={{ textAlign: 'center', padding: '30px', borderTop: '1px solid #eee' }}>
         <p style={{ marginBottom: '16px', color: '#666' }}>Share your credential</p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.ai/c/sarah-chen')}`} target="_blank" rel="noopener" style={{ background: '#0077b5', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px' }}>
-            LinkedIn
+          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app/credentials/' + id)}`} target="_blank" rel="noopener" style={{ background: '#0077b5', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px' }}>
+            Share on LinkedIn
           </a>
-          <button style={{ background: '#1a1a2e', color: 'white', padding: '12px 24px', borderRadius: '6px', border: 'none', fontSize: '14px', cursor: 'pointer' }}>
-            Download PDF
-          </button>
+          <span style={{ background: '#ccc', color: '#666', padding: '12px 24px', borderRadius: '6px', fontSize: '14px' }}>
+            PDF Download (Coming Soon)
+          </span>
         </div>
       </div>
 

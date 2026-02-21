@@ -5,12 +5,11 @@ export default function ValidatorReviewPage({ params }) {
   const resolvedParams = use(params);
   const reportId = resolvedParams?.id;
   
-  const [step, setStep] = useState('review'); // review | validate | done
+  const [step, setStep] = useState('review');
   const [comment, setComment] = useState('');
   const [scoreOverride, setScoreOverride] = useState('');
   const [status, setStatus] = useState('validated');
   
-  // Sample report data
   const report = {
     id: reportId,
     learner_name: 'Sarah Chen',
@@ -34,15 +33,14 @@ export default function ValidatorReviewPage({ params }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In production, this would call an API
     setStep('done');
   };
 
   if (step === 'done') {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px', textAlign: 'center', fontFamily: 'Inter, sans-serif', background: '#f8f9fa', minHeight: '100vh' }}>
         <div style={{ fontSize: '60px', marginBottom: '20px' }}>✓</div>
-        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '16px' }}>Report Validated!</h1>
+        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '16px', color: '#1a1a2e' }}>Report Validated!</h1>
         <p style={{ color: '#666', marginBottom: '30px' }}>
           Sarah Chen has been notified. Their credential is now live.
         </p>
@@ -54,19 +52,19 @@ export default function ValidatorReviewPage({ params }) {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#f8f9fa', minHeight: '100vh' }}>
       {/* Header */}
       <a href="/validate" style={{ display: 'inline-block', marginBottom: '20px', color: '#666', textDecoration: 'none' }}>← Back to Queue</a>
       
-      <h1 style={{ fontSize: '24px', marginBottom: '30px' }}>Review Report: {report.learner_name}</h1>
+      <h1 style={{ fontSize: '24px', marginBottom: '30px', color: '#1a1a2e' }}>Review Report: {report.learner_name}</h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 300px', gap: '30px' }}>
-        {/* Left Panel - Learner Context */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 350px', gap: '24px' }}>
+        {/* Left Panel */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '16px' }}>Learner Context</h3>
           
           <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontWeight: 600, fontSize: '18px' }}>{report.learner_name}</div>
+            <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a1a2e' }}>{report.learner_name}</div>
             <div style={{ color: '#666' }}>{report.role}</div>
             <div style={{ color: '#888', fontSize: '14px' }}>{report.sector}</div>
           </div>
@@ -83,7 +81,7 @@ export default function ValidatorReviewPage({ params }) {
           </div>
         </div>
 
-        {/* Center Panel - Report */}
+        {/* Center Panel */}
         <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '16px' }}>Aria's Assessment</h3>
           
@@ -106,13 +104,13 @@ export default function ValidatorReviewPage({ params }) {
           </div>
         </div>
 
-        {/* Right Panel - Validation */}
-        <div style={{ background: '#f8f9fa', padding: '24px', borderRadius: '12px' }}>
+        {/* Right Panel */}
+        <div style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '20px' }}>Validation</h3>
           
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#1a1a2e' }}>
                 Your Comment <span style={{ color: '#e94560' }}>*</span>
               </label>
               <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
@@ -128,7 +126,7 @@ export default function ValidatorReviewPage({ params }) {
             </div>
             
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#1a1a2e' }}>
                 Score Override (optional)
               </label>
               <input
@@ -143,10 +141,10 @@ export default function ValidatorReviewPage({ params }) {
             </div>
             
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '12px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: '#1a1a2e' }}>
                 Assessment
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#333' }}>
                 <input 
                   type="radio" 
                   name="status" 
@@ -157,7 +155,7 @@ export default function ValidatorReviewPage({ params }) {
                 />
                 <span>✓ Validated — accurate assessment</span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#333' }}>
                 <input 
                   type="radio" 
                   name="status" 
@@ -168,7 +166,7 @@ export default function ValidatorReviewPage({ params }) {
                 />
                 <span>Needs Revision — return to Aria</span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#333' }}>
                 <input 
                   type="radio" 
                   name="status" 
