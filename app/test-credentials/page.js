@@ -114,9 +114,9 @@ export default function CredentialTest() {
       {result && (
         <div style={{ marginTop: '40px', background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px' }}>{result.report.report_title}</h2>
+            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px' }}>{result.report?.report_title || 'Report'}</h2>
             <span style={{ background: '#e94560', color: 'white', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
-              Score: {result.report.overall_score}
+              Score: {result.report?.overall_score || 'N/A'}
             </span>
           </div>
 
@@ -128,22 +128,24 @@ export default function CredentialTest() {
               What Aria Noticed
             </div>
             <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6' }}>
-              {result.report.aria_noticed.observation}
+              {result.report?.aria_noticed?.observation || 'No observation'}
             </div>
             <div style={{ marginTop: '16px', fontSize: '14px', color: '#666', fontStyle: 'italic' }}>
-              {result.report.aria_noticed.prediction}
+              {result.report?.aria_noticed?.prediction || ''}
             </div>
           </div>
 
-          <p><strong>Headline:</strong> {result.report.executive_summary.headline}</p>
+          <p><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
           
-          <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {result.badges_earned.map(b => (
-              <span key={b} style={{ background: '#1a1a2e', color: 'white', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
-                {b}
-              </span>
-            ))}
-          </div>
+          {result.badges_earned && result.badges_earned.length > 0 && (
+            <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {result.badges_earned.map(b => (
+                <span key={b} style={{ background: '#1a1a2e', color: 'white', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
+                  {b}
+                </span>
+              ))}
+            </div>
+          )}
 
           <p style={{ marginTop: '20px', fontSize: '13px', color: '#888' }}>
             <strong>Share slug:</strong> {result.share_slug}
