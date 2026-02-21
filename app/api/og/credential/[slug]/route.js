@@ -1,4 +1,4 @@
-// OG Image Generation for Credentials
+// OG Image Generation for Credentials - Premium Design
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
@@ -6,12 +6,13 @@ export const runtime = 'edge';
 export async function GET(request, { params }) {
   const slug = params.slug;
   
-  // Extract name from slug
+  // Extract data from slug
   const name = slug?.replace(/-/g, ' ') || 'Learner';
   const nameParts = name.split(' ');
   const firstName = nameParts[0] || 'Learner';
   const lastName = nameParts.slice(1).join(' ') || '';
-  
+  const initials = (firstName[0] || 'L') + (lastName[0] || 'L');
+
   return new ImageResponse(
     (
       <div
@@ -22,69 +23,104 @@ export async function GET(request, { params }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#1a1a2e',
+          backgroundColor: '#000',
           fontFamily: 'Inter, sans-serif',
+          position: 'relative',
         }}
       >
         {/* Background pattern */}
-        <div style={{ position: 'absolute', inset: 0, opacity: 0.1 }}>
-          <svg width="100%" height="100%">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          <div style={{ 
+            position: 'absolute', 
+            top: '-50%', 
+            right: '-50%', 
+            width: '100%', 
+            height: '100%', 
+            background: 'radial-gradient(circle, #d4af37 0%, transparent 50%)', 
+            opacity: 0.1 
+          }} />
+          <div style={{ 
+            position: 'absolute', 
+            bottom: '-50%', 
+            left: '-50%', 
+            width: '100%', 
+            height: '100%', 
+            background: 'radial-gradient(circle, #d4af37 0%, transparent 50%)', 
+            opacity: 0.05 
+          }} />
         </div>
         
         {/* Content */}
-        <div style={{ textAlign: 'center', color: 'white', zIndex: 1 }}>
+        <div style={{ zIndex: 1, textAlign: 'center', padding: '40px' }}>
           {/* Logo */}
-          <div style={{ fontSize: 14, letterSpacing: 6, marginBottom: 40, opacity: 0.7 }}>EXCELLERE</div>
+          <div style={{ fontSize: 14, letterSpacing: 8, color: '#d4af37', marginBottom: 40 }}>
+            ✦ EXCELLERE
+          </div>
+          
+          {/* Verified Badge */}
+          <div style={{ 
+            display: 'inline-block', 
+            background: '#d4af37', 
+            color: '#000', 
+            padding: '6px 16px', 
+            borderRadius: 20, 
+            fontSize: 11, 
+            fontWeight: 600,
+            letterSpacing: 1,
+            marginBottom: 30 
+          }}>
+            ✓ VERIFIED CREDENTIAL
+          </div>
           
           {/* Avatar */}
           <div style={{ 
-            width: 100, 
-            height: 100, 
+            width: 120, 
+            height: 120, 
             borderRadius: '50%', 
-            background: 'linear-gradient(135deg, #e94560 0%, #d6304b 100%)',
+            background: 'linear-gradient(135deg, #d4af37 0%, #b8962e 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 36,
-            fontWeight: 600,
-            margin: '0 auto 24px'
+            fontSize: 48,
+            fontWeight: 700,
+            color: '#000',
+            margin: '0 auto 24px',
+            fontFamily: 'Playfair Display, serif'
           }}>
-            {firstName[0]}{lastName[0] || firstName[1] || 'L'}
+            {initials}
           </div>
           
           {/* Name */}
-          <div style={{ fontSize: 36, fontWeight: 600, marginBottom: 8 }}>
+          <div style={{ fontSize: 42, fontWeight: 600, color: '#fff', marginBottom: 8 }}>
             {firstName} {lastName}
           </div>
           
           {/* Role */}
-          <div style={{ fontSize: 18, color: '#e94560', marginBottom: 24 }}>
+          <div style={{ fontSize: 18, color: '#d4af37', marginBottom: 24 }}>
             AI Leadership Credential
           </div>
           
-          {/* Badge */}
+          {/* Archetype */}
           <div style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: 8,
-            background: '#2ecc71',
-            padding: '8px 16px',
-            borderRadius: 20,
+            display: 'inline-block', 
+            background: '#1a1a1a', 
+            color: '#888', 
+            padding: '8px 20px', 
+            borderRadius: 20, 
             fontSize: 14,
+            marginBottom: 30 
           }}>
-            ✓ Verified by Prof. Mark Esposito
+            Strategic Reframer
+          </div>
+          
+          {/* Validator */}
+          <div style={{ fontSize: 14, color: '#666', marginTop: 20 }}>
+            Validated by Prof. Mark Esposito
           </div>
         </div>
         
         {/* Footer */}
-        <div style={{ position: 'absolute', bottom: 24, fontSize: 12, color: '#666' }}>
+        <div style={{ position: 'absolute', bottom: 20, fontSize: 12, color: '#333' }}>
           excellere.ai
         </div>
       </div>
