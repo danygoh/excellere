@@ -152,14 +152,24 @@ export default function CredentialTest() {
           </p>
           
           {result.public_url && (
-            <a 
-              href={result.public_url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={{ display: 'inline-block', marginTop: '16px', background: '#2ecc71', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: 500 }}
-            >
-              View Public Credential →
-            </a>
+            <div style={{ marginTop: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <a 
+                href={result.public_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ display: 'inline-block', background: '#2ecc71', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: 500 }}
+              >
+                View Public Credential →
+              </a>
+              <a 
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app' + result.public_url)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'inline-block', background: '#0077b5', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: 500 }}
+              >
+                Share on LinkedIn
+              </a>
+            </div>
           )}
         </div>
       )}
