@@ -1,5 +1,4 @@
 'use client';
-// Test page for credential system
 import { useState, useEffect } from 'react';
 
 export default function CredentialTest() {
@@ -56,28 +55,28 @@ export default function CredentialTest() {
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#fff', minHeight: '100vh' }}>
-      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '10px', color: '#1a1a2e' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
+      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '10px', color: '#e2e8f0' }}>
         🎓 Excellere Credential System - Test
       </h1>
-      <p style={{ color: '#666', marginBottom: '30px' }}>
+      <p style={{ color: '#94a3b8', marginBottom: '30px' }}>
         Test the "What Aria Noticed" section with five real profiles.
       </p>
 
-      {loading && <p style={{ color: '#666' }}>Loading...</p>}
-      {error && <p style={{ color: '#c00', background: '#fee', padding: '12px', borderRadius: '6px' }}>{error}</p>}
+      {loading && <p style={{ color: '#94a3b8' }}>Loading...</p>}
+      {error && <p style={{ color: '#ef4444', background: '#1e293b', padding: '12px', borderRadius: '6px' }}>{error}</p>}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginTop: '30px' }}>
         {profiles.map(p => (
           <div key={p.id} style={{
-            background: '#fff', padding: '24px', borderRadius: '12px',
-            border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+            background: '#1e293b', padding: '24px', borderRadius: '12px',
+            border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
           }}>
-            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', marginBottom: '4px', color: '#1a1a2e' }}>{p.name}</h3>
-            <p style={{ color: '#e94560', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{p.role}</p>
-            <p style={{ color: '#888', fontSize: '13px', marginBottom: '12px' }}>{p.sector}</p>
+            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', marginBottom: '4px', color: '#e2e8f0' }}>{p.name}</h3>
+            <p style={{ color: '#10b981', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{p.role}</p>
+            <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '12px' }}>{p.sector}</p>
             <span style={{
-              background: '#f0f0f0', color: '#333', padding: '6px 14px', borderRadius: '20px',
+              background: '#334155', color: '#e2e8f0', padding: '6px 14px', borderRadius: '20px',
               fontSize: '11px', fontWeight: '500', display: 'inline-block'
             }}>
               {p.archetype}
@@ -86,7 +85,7 @@ export default function CredentialTest() {
               onClick={() => generateReport(p.id)}
               style={{
                 display: 'block', width: '100%', marginTop: '16px',
-                background: '#e94560', color: '#fff', border: 'none',
+                background: '#10b981', color: '#fff', border: 'none',
                 padding: '10px', borderRadius: '6px', fontSize: '13px',
                 cursor: 'pointer'
               }}
@@ -98,41 +97,41 @@ export default function CredentialTest() {
       </div>
 
       {result && (
-        <div style={{ marginTop: '40px', background: '#fff', padding: '30px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+        <div style={{ marginTop: '40px', background: '#1e293b', padding: '30px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px', color: '#1a1a2e' }}>{result.report?.report_title || 'Report'}</h2>
-            <span style={{ background: '#e94560', color: '#fff', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
+            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px', color: '#e2e8f0' }}>{result.report?.report_title || 'Report'}</h2>
+            <span style={{ background: '#10b981', color: '#fff', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
               Score: {result.report?.overall_score || 'N/A'}
             </span>
           </div>
 
           <div style={{
-            background: '#fffbf0', borderLeft: '4px solid #d4af37', padding: '24px', margin: '20px 0'
+            background: '#134e4a', borderLeft: '4px solid #10b981', padding: '24px', margin: '20px 0'
           }}>
-            <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#d4af37', marginBottom: '12px' }}>
+            <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#10b981', marginBottom: '12px' }}>
               What Aria Noticed
             </div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6', color: '#333' }}>
+            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6', color: '#e2e8f0' }}>
               {result.report?.aria_noticed?.observation || 'No observation'}
             </div>
-            <div style={{ marginTop: '16px', fontSize: '14px', color: '#666', fontStyle: 'italic' }}>
+            <div style={{ marginTop: '16px', fontSize: '14px', color: '#94a3b8', fontStyle: 'italic' }}>
               {result.report?.aria_noticed?.prediction || ''}
             </div>
           </div>
 
-          <p style={{ color: '#333' }}><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
+          <p style={{ color: '#e2e8f0' }}><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
           
           {result.badges_earned && result.badges_earned.length > 0 && (
             <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {result.badges_earned.map(b => (
-                <span key={b} style={{ background: '#f0f0f0', color: '#333', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
+                <span key={b} style={{ background: '#334155', color: '#e2e8f0', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
                   {b}
                 </span>
               ))}
             </div>
           )}
 
-          <p style={{ marginTop: '20px', fontSize: '13px', color: '#888' }}>
+          <p style={{ marginTop: '20px', fontSize: '13px', color: '#64748b' }}>
             <strong>Share slug:</strong> {result.share_slug}
           </p>
           
@@ -142,7 +141,7 @@ export default function CredentialTest() {
                 href={result.public_url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                style={{ display: 'inline-block', background: '#2ecc71', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
+                style={{ display: 'inline-block', background: '#10b981', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
               >
                 View Public Credential →
               </a>

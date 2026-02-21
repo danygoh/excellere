@@ -23,12 +23,7 @@ export default function ValidatorReviewPage({ params }) {
       'Session 1: "AI-native is about fundamentally rethinking how we create value"',
       'Session 2: "The gap to Level 3 is about our decision-making framework"',
       'Session 3: "AI-first means AI is the default, humans retain strategic override"'
-    ],
-    artefact: {
-      title: 'AI-Native Operating Model Proposal',
-      summary: 'Proposal to restructure core operational processes around AI decision-making.',
-      board_readiness: 72
-    }
+    ]
   };
 
   const handleSubmit = (e) => {
@@ -38,13 +33,13 @@ export default function ValidatorReviewPage({ params }) {
 
   if (step === 'done') {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px', textAlign: 'center', fontFamily: 'Inter, sans-serif', background: '#fff', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px', textAlign: 'center', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
         <div style={{ fontSize: '60px', marginBottom: '20px' }}>✓</div>
-        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '16px', color: '#1a1a2e' }}>Report Validated!</h1>
-        <p style={{ color: '#666', marginBottom: '30px' }}>
+        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '16px', color: '#e2e8f0' }}>Report Validated!</h1>
+        <p style={{ color: '#94a3b8', marginBottom: '30px' }}>
           Sarah Chen has been notified. Their credential is now live.
         </p>
-        <a href="/validate" style={{ background: '#e94560', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none' }}>
+        <a href="/validate" style={{ background: '#10b981', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none' }}>
           Back to Dashboard
         </a>
       </div>
@@ -52,51 +47,50 @@ export default function ValidatorReviewPage({ params }) {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#fff', minHeight: '100vh' }}>
-      {/* Header */}
-      <a href="/validate" style={{ display: 'inline-block', marginBottom: '20px', color: '#666', textDecoration: 'none' }}>← Back to Queue</a>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#0f172a', minHeight: '100vh' }}>
+      <a href="/validate" style={{ display: 'inline-block', marginBottom: '20px', color: '#64748b', textDecoration: 'none' }}>← Back to Queue</a>
       
-      <h1 style={{ fontSize: '24px', marginBottom: '30px', color: '#1a1a2e' }}>Review Report: {report.learner_name}</h1>
+      <h1 style={{ fontSize: '24px', marginBottom: '30px', color: '#e2e8f0' }}>Review Report: {report.learner_name}</h1>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 350px', gap: '24px' }}>
         {/* Left Panel */}
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '16px' }}>Learner Context</h3>
+        <div style={{ background: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '16px' }}>Learner Context</h3>
           
           <div style={{ marginBottom: '20px' }}>
-            <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a1a2e' }}>{report.learner_name}</div>
-            <div style={{ color: '#666' }}>{report.role}</div>
-            <div style={{ color: '#888', fontSize: '14px' }}>{report.sector}</div>
+            <div style={{ fontWeight: 600, fontSize: '18px', color: '#e2e8f0' }}>{report.learner_name}</div>
+            <div style={{ color: '#94a3b8' }}>{report.role}</div>
+            <div style={{ color: '#64748b', fontSize: '14px' }}>{report.sector}</div>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <span style={{ background: '#f0f0f0', color: '#333', padding: '4px 12px', borderRadius: '20px', fontSize: '12px' }}>
+            <span style={{ background: '#334155', color: '#e2e8f0', padding: '4px 12px', borderRadius: '20px', fontSize: '12px' }}>
               {report.archetype}
             </span>
           </div>
           
-          <div style={{ fontSize: '14px', color: '#666' }}>
+          <div style={{ fontSize: '14px', color: '#94a3b8' }}>
             <strong>Module:</strong> {report.module}<br/>
             <strong>Submitted:</strong> Feb 20, 2026
           </div>
         </div>
 
         {/* Center Panel */}
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '16px' }}>Aria's Assessment</h3>
+        <div style={{ background: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '16px' }}>Aria's Assessment</h3>
           
-          <div style={{ marginBottom: '20px', color: '#333' }}>
+          <div style={{ marginBottom: '20px', color: '#e2e8f0' }}>
             <strong>Overall Score:</strong> {report.overall_score}/100
           </div>
           
           <div style={{ marginBottom: '20px' }}>
-            <strong style={{ display: 'block', marginBottom: '8px', color: '#333' }}>What Aria Noticed:</strong>
-            <p style={{ fontSize: '14px', fontStyle: 'italic', lineHeight: 1.6, color: '#555' }}>{report.aria_noticed}</p>
+            <strong style={{ display: 'block', marginBottom: '8px', color: '#e2e8f0' }}>What Aria Noticed:</strong>
+            <p style={{ fontSize: '14px', fontStyle: 'italic', lineHeight: 1.6, color: '#94a3b8' }}>{report.aria_noticed}</p>
           </div>
           
           <div>
-            <strong style={{ display: 'block', marginBottom: '8px', color: '#333' }}>Key Moments:</strong>
-            <ul style={{ fontSize: '13px', color: '#666', paddingLeft: '20px' }}>
+            <strong style={{ display: 'block', marginBottom: '8px', color: '#e2e8f0' }}>Key Moments:</strong>
+            <ul style={{ fontSize: '13px', color: '#94a3b8', paddingLeft: '20px' }}>
               {report.key_moments.map((m, i) => (
                 <li key={i} style={{ marginBottom: '4px' }}>{m}</li>
               ))}
@@ -105,28 +99,28 @@ export default function ValidatorReviewPage({ params }) {
         </div>
 
         {/* Right Panel */}
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '20px' }}>Validation</h3>
+        <div style={{ background: '#1e293b', padding: '24px', borderRadius: '12px', border: '1px solid #334155', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#64748b', marginBottom: '20px' }}>Validation</h3>
           
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#1a1a2e' }}>
-                Your Comment <span style={{ color: '#e94560' }}>*</span>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#e2e8f0' }}>
+                Your Comment <span style={{ color: '#10b981' }}>*</span>
               </label>
-              <p style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
-                Write 2-4 sentences personal to this learner. This appears on their credential.
+              <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
+                Write 2-4 sentences personal to this learner.
               </p>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="e.g. Sarah demonstrates exceptional strategic thinking..."
                 required
-                style={{ width: '100%', height: '120px', padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', resize: 'none', background: '#fff', color: '#333' }}
+                style={{ width: '100%', height: '120px', padding: '12px', border: '1px solid #334155', borderRadius: '8px', fontSize: '14px', fontFamily: 'inherit', resize: 'none', background: '#0f172a', color: '#e2e8f0' }}
               />
             </div>
             
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#1a1a2e' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: '#e2e8f0' }}>
                 Score Override (optional)
               </label>
               <input
@@ -136,45 +130,24 @@ export default function ValidatorReviewPage({ params }) {
                 min="0"
                 max="100"
                 placeholder={report.overall_score}
-                style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', background: '#fff', color: '#333' }}
+                style={{ width: '100%', padding: '12px', border: '1px solid #334155', borderRadius: '8px', fontSize: '14px', background: '#0f172a', color: '#e2e8f0' }}
               />
             </div>
             
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: '#1a1a2e' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: '#e2e8f0' }}>
                 Assessment
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#333' }}>
-                <input 
-                  type="radio' 
-                  name="status" 
-                  value="validated" 
-                  checked={status === 'validated'}
-                  onChange={(e) => setStatus(e.target.value)}
-                  style={{ marginRight: '8px' }}
-                />
+              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#e2e8f0' }}>
+                <input type="radio" name="status" value="validated" checked={status === 'validated'} onChange={(e) => setStatus(e.target.value)} style={{ marginRight: '8px' }} />
                 <span>✓ Validated — accurate assessment</span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#333' }}>
-                <input 
-                  type="radio" 
-                  name="status" 
-                  value="needs_revision" 
-                  checked={status === 'needs_revision'}
-                  onChange={(e) => setStatus(e.target.value)}
-                  style={{ marginRight: '8px' }}
-                />
+              <label style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', cursor: 'pointer', color: '#e2e8f0' }}>
+                <input type="radio" name="status" value="needs_revision" checked={status === 'needs_revision'} onChange={(e) => setStatus(e.target.value)} style={{ marginRight: '8px' }} />
                 <span>Needs Revision — return to Aria</span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#333' }}>
-                <input 
-                  type="radio" 
-                  name="status" 
-                  value="exceptional" 
-                  checked={status === 'exceptional'}
-                  onChange={(e) => setStatus(e.target.value)}
-                  style={{ marginRight: '8px' }}
-                />
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#e2e8f0' }}>
+                <input type="radio" name="status" value="exceptional" checked={status === 'exceptional'} onChange={(e) => setStatus(e.target.value)} style={{ marginRight: '8px' }} />
                 <span>★ Exceptional — flag for feature</span>
               </label>
             </div>
@@ -184,7 +157,7 @@ export default function ValidatorReviewPage({ params }) {
               disabled={!comment.trim()}
               style={{ 
                 width: '100%', 
-                background: comment.trim() ? '#2ecc71' : '#ccc', 
+                background: comment.trim() ? '#10b981' : '#334155', 
                 color: '#fff', 
                 border: 'none', 
                 padding: '14px', 
