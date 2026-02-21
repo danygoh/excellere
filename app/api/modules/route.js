@@ -1,34 +1,39 @@
-import { NextResponse } from 'next/server'
+// API Route: Get modules in correct learning order
+import { NextResponse } from 'next/server';
 
-const modules = [
-  {
-    id: 1,
-    name: 'AI-Native Business Design',
-    description: 'Audit which processes are AI-native vs augmented',
-    outcome: 'AI-Native Firm Audit',
-    concepts: [
-      {
-        id: 'ai-native-intro',
-        title: 'What is an AI-Native Business?',
-        body: 'An AI-native business is one that is built from the ground up with AI as a core capability...',
-        examples: ['Netflix', 'Amazon', 'Spotify']
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Double Loop Strategy',
-    description: 'Master the strategy framework for AI transformation',
-    outcome: 'Double Loop Strategy Canvas'
-  },
-  {
-    id: 3,
-    name: 'Agentic AI',
-    description: 'Identify opportunities for agentic AI in your workflows',
-    outcome: 'Agent Opportunity Map'
-  }
-]
+export async function GET() {
+  // Correct order: AI-Native → Double Loop → Agentic
+  // Double Loop is the conceptual bridge between understanding AI-native design (Module 1) 
+  // and knowing where to deploy autonomous agents (Module 3)
+  const modules = [
+    {
+      id: 'ai-native-business-design',
+      name: 'AI-Native Business Design',
+      description: 'Audit which processes are AI-native vs augmented',
+      outcome: 'AI-Native Firm Audit',
+      order: 1,
+      icon: '🎯'
+    },
+    {
+      id: 'double-loop-strategy',
+      name: 'Double Loop Strategy',
+      description: 'Master the strategy framework for AI transformation',
+      outcome: 'Double Loop Strategy Canvas',
+      order: 2,
+      icon: '🔄'
+    },
+    {
+      id: 'agentic-ai',
+      name: 'Agentic AI',
+      description: 'Identify opportunities for agentic AI in your workflows',
+      outcome: 'Agent Opportunity Map',
+      order: 3,
+      icon: '🤖'
+    }
+  ];
 
-export async function GET(request) {
-  return NextResponse.json(modules)
+  return NextResponse.json({
+    success: true,
+    modules
+  });
 }
