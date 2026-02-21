@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
 export default function CredentialPage() {
-  const slug = useParams()?.slug;
+  const params = useParams();
+  const slug = params?.slug;
   const [credential, setCredential] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,10 +12,13 @@ export default function CredentialPage() {
   useEffect(() => {
     if (slug) {
       fetchCredential();
+    } else {
+      setLoading(false);
     }
   }, [slug]);
 
   const fetchCredential = async () => {
+    if (!slug) return;
     try {
       const res = await fetch(`/api/credentials/${slug}`);
       const data = await res.json();
