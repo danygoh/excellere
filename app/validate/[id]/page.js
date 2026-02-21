@@ -1,9 +1,10 @@
-'use client';
-import { useState, use } from 'react';
+import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function ValidatorReviewPage({ params }) {
-  const resolvedParams = use(params);
-  const reportId = resolvedParams?.id;
+export default function ValidatorReviewPage() {
+  const searchParams = useSearchParams();
+  const reportId = 'r1'; // For demo
+  
   const [step, setStep] = useState('review');
   const [comment, setComment] = useState('');
   
@@ -15,10 +16,13 @@ export default function ValidatorReviewPage({ params }) {
     module: 'AI-Native Business Design',
     overall_score: 84,
     aria_noticed: 'What struck me most was how you consistently refused to accept the premise of questions, instead reframing them at a deeper level.',
-    key_moments: ['Session 1: "AI-native is about fundamentally rethinking how we create value"', 'Session 2: "The gap to Level 3 is about our decision-making framework"', 'Session 3: "AI-first means AI is the default"']
+    key_moments: ['Session 1: "AI-native is about fundamentally rethinking"', 'Session 2: "The gap to Level 3 is about our decision-making"', 'Session 3: "AI-first means AI is the default"']
   };
 
-  const handleSubmit = (e) => { e.preventDefault(); setStep('done'); };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStep('done');
+  };
 
   if (step === 'done') {
     return (
