@@ -1,0 +1,32 @@
+[
+  {
+    "id": "validator-mark",
+    "name": "Prof. Mark Esposito",
+    "title": "Professor of Business & Economics",
+    "institution": "Harvard University / Hult International Business School",
+    "bio": "One of the world's leading thinkers on AI strategy, exponential technologies, and the future of business.",
+    "photo_url": "/images/validators/mark-esposito.jpg",
+    "email": "mark@excellere.ai",
+    "active": true
+  },
+  {
+    "id": "validator-terence",
+    "name": "Prof. Terence Tse",
+    "title": "Professor of Finance & AI Transformation",
+    "institution": "ESCP Business School",
+    "bio": "Expert in digital transformation, AI strategy, and the intersection of finance and emerging technology.",
+    "photo_url": "/images/validators/terence-tse.jpg",
+    "email": "terence@excellere.ai",
+    "active": true
+  },
+  {
+    "id": "validator-danny",
+    "name": "Danny Goh",
+    "title": "AI Strategy Practitioner & Executive Educator",
+    "institution": "Excellere",
+    "bio": "Practitioner-educator specialising in helping senior leaders build genuine AI fluency.",
+    "photo_url": "/images/validators/danny-goh.jpg",
+    "email": "danny@excellere.ai",
+    "active": true
+  }
+]

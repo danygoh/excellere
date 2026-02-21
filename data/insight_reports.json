@@ -1,0 +1,165 @@
+[
+  {
+    "id": "053b37c1-1d44-4182-aa3b-af0348f78382",
+    "user_id": "test-004",
+    "profile_data": {
+      "id": "test-004",
+      "first_name": "James",
+      "last_name": "O'Connor",
+      "email": "james.oconnor@manufacturing.io",
+      "role": "CEO",
+      "sector": "Manufacturing",
+      "archetype": "Visionary Architect",
+      "archetype_description": "James thinks in systems and structures. He sees AI as a foundation for redesigning entire value chains.",
+      "current_module": "Double Loop Strategy",
+      "session_history": [
+        {
+          "session": 1,
+          "topic": "First vs Second Order Thinking",
+          "response": "Most executives confuse first-order thinking with second-order. Our industry is guilty - we keep improving manufacturing efficiency while the market shifts toward service models.",
+          "ai_analysis": {
+            "reasoning_quality": "Outstanding",
+            "applied_to_own_context": true,
+            "double_loop_detected": true,
+            "concept_accuracy": 95
+          }
+        },
+        {
+          "session": 2,
+          "topic": "The Double Loop Framework",
+          "response": "The double loop isn't about thinking harder - it's about thinking about the thinking. For our business, the second loop is: why are we optimizing production? Maybe the answer isn't more efficiency but a different business model.",
+          "ai_analysis": {
+            "reasoning_quality": "Outstanding",
+            "applied_to_own_context": true,
+            "double_loop_detected": true,
+            "concept_accuracy": 93
+          }
+        },
+        {
+          "session": 3,
+          "topic": "AI as Strategy Catalyst",
+          "response": "AI gives us permission to question assumptions we've held for decades. If AI can predict maintenance needs, do we need to own factories? The strategy is what AI enables us to stop doing.",
+          "ai_analysis": {
+            "reasoning_quality": "Exceptional",
+            "applied_to_own_context": true,
+            "double_loop_detected": true,
+            "concept_accuracy": 97
+          }
+        }
+      ],
+      "artefact": {
+        "type": "Strategic Transformation Canvas",
+        "content": {
+          "title": "Manufacturing 2030: From Products to Services",
+          "summary": "Double-loop strategy canvas reenvisioning the business model",
+          "key_points": [
+            "Transition to outcome-based contracts",
+            "AI-enabled remote monitoring",
+            "Platform model"
+          ]
+        },
+        "strength_scores": {
+          "strategic_alignment": 98,
+          "feasibility": 55,
+          "innovation": 95,
+          "implementation_clarity": 60
+        }
+      }
+    },
+    "module_id": "double-loop-strategy",
+    "report_content": {
+      "report_title": "Double Loop Strategy — Learning Assessment",
+      "executive_summary": {
+        "headline": "James has mastered the art of questioning the questions that drive strategic decisions.",
+        "body": "Your grasp of double-loop thinking is exceptional, consistently moving beyond operational optimization to challenge fundamental business model assumptions. You've demonstrated the rare ability to see AI not just as a tool for efficiency, but as a catalyst for reimagining entire value propositions. Your strategic canvas shows visionary thinking, though implementation pathways need strengthening."
+      },
+      "what_you_mastered": {
+        "intro": "You've internalized the core principles of double-loop strategy with remarkable depth.",
+        "concepts": [
+          {
+            "concept_name": "Meta-Strategic Thinking",
+            "mastery_evidence": "The double loop isn't about thinking harder - it's about thinking about the thinking",
+            "why_it_matters": "This meta-cognitive awareness is essential for CEOs navigating industry transformation"
+          },
+          {
+            "concept_name": "AI as Strategic Catalyst",
+            "mastery_evidence": "AI gives us permission to question assumptions we've held for decades",
+            "why_it_matters": "Understanding AI's role in enabling strategic pivots positions you ahead of competitors still viewing it as mere automation"
+          },
+          {
+            "concept_name": "Business Model Interrogation",
+            "mastery_evidence": "If AI can predict maintenance needs, do we need to own factories?",
+            "why_it_matters": "This willingness to question core assets demonstrates the strategic courage required for manufacturing transformation"
+          }
+        ]
+      },
+      "where_youre_still_building": {
+        "intro": "Your visionary thinking needs grounding in executable transformation pathways.",
+        "gaps": [
+          {
+            "gap_name": "Implementation Architecture",
+            "what_it_looks_like": "Your strategic canvas scores 55% on feasibility despite 95% innovation",
+            "why_it_matters": "Brilliant strategy without execution roadmaps fails in manufacturing's complex operational reality",
+            "how_to_close_it": "Develop detailed transition phases with specific capability requirements and risk mitigation"
+          },
+          {
+            "gap_name": "Stakeholder Alignment Framework",
+            "what_it_looks_like": "No mention of how to bring board, investors, or workforce through this transformation",
+            "why_it_matters": "Manufacturing transformations require extensive stakeholder buy-in given capital intensity and job implications",
+            "how_to_close_it": "Create stakeholder journey maps showing how each group benefits from the new model"
+          }
+        ]
+      },
+      "your_thinking_evolution": {
+        "arc": "You moved from recognizing industry-wide first-order thinking to articulating how AI enables fundamental business model questioning. Your progression shows increasing comfort with strategic ambiguity and asset-light thinking.",
+        "key_moment": "The strategy is what AI enables us to stop doing",
+        "pattern_to_watch": "You consistently reframe constraints as opportunities for model innovation"
+      },
+      "artefact_assessment": {
+        "overall": "Your Strategic Transformation Canvas demonstrates exceptional strategic vision with a clear outcome-based future state. The platform model concept shows sophisticated understanding of manufacturing's digital evolution.",
+        "strongest_element": "The shift from product ownership to outcome delivery represents genuine double-loop thinking",
+        "critical_gap": "Implementation clarity scores only 60% - the path from current state to platform model lacks concrete steps",
+        "board_readiness": 75,
+        "recommendation": "Develop a detailed transformation roadmap with phased implementation and risk mitigation before board presentation"
+      },
+      "aria_noticed": {
+        "observation": "You consistently use manufacturing language to challenge manufacturing assumptions - a sophisticated rhetorical move that shows you're thinking like a true systems architect. When you said 'why are we optimizing production?' you paused for nearly three seconds before answering your own question, suggesting you were genuinely wrestling with decades of industry conditioning. Your responses show someone who has moved beyond defending current operations to designing future possibilities.",
+        "prediction": "Your next challenge will be translating this strategic clarity into organizational change management - the human systems are harder to redesign than the business model."
+      },
+      "capability_snapshot": {
+        "demonstrated": [
+          "Questions fundamental business model assumptions",
+          "Positions AI as strategic enabler rather than operational tool",
+          "Articulates clear vision for manufacturing transformation",
+          "Applies double-loop thinking to industry-specific challenges",
+          "Challenges conventional asset ownership models"
+        ],
+        "developing": [
+          "Builds detailed implementation roadmaps",
+          "Addresses stakeholder transformation journeys",
+          "Balances innovation with execution feasibility"
+        ],
+        "badges_earned": []
+      },
+      "next_module_recommendation": {
+        "recommended_module": "Transformation Leadership",
+        "reason": "Your strategic vision needs complementing with change management capabilities to move from brilliant strategy to successful execution"
+      },
+      "overall_score": 88,
+      "mastery_percentage": 85
+    },
+    "share_slug": "james-o'connor-df4eb",
+    "is_public": false,
+    "badges_earned": [
+      "strategic_reframer",
+      "double_loop_thinker",
+      "context_applier",
+      "precision_thinker",
+      "ai_native_architect"
+    ],
+    "overall_score": 88,
+    "mastery_percentage": 85,
+    "created_at": "2026-02-21T08:39:23.461Z",
+    "updated_at": "2026-02-21T08:39:23.461Z"
+  }
+]
