@@ -1,37 +1,32 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect, use } from 'react';
 
-export default function CredentialPage() {
-  const params = useParams();
-  const slug = params?.slug;
+export default function CredentialPage({ params }) {
+  const resolvedParams = use(params);
+  const slug = resolvedParams?.slug;
   const [credential, setCredential] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (slug) {
-      fetchCredential();
-    } else {
+    if (!slug) {
+      setError('No slug provided');
       setLoading(false);
+      return;
     }
-  }, [slug]);
 
-  const fetchCredential = async () => {
-    if (!slug) return;
-    try {
-      const res = await fetch(`/api/credentials/${slug}`);
-      const data = await res.json();
-      if (data.success) {
-        setCredential(data.credential);
-      } else {
-        setError(data.error || 'Credential not found');
-      }
-    } catch (e) {
-      setError(e.message);
-    }
-    setLoading(false);
-  };
+    fetch(`/api/credentials/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCredential(data.credential);
+        } else {
+          setError(data.error || 'Credential not found');
+        }
+      })
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   if (loading) {
     return (
@@ -81,14 +76,6 @@ export default function CredentialPage() {
         <div style={{ background: 'linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%)', borderLeft: '4px solid #d4af37', padding: '24px', marginBottom: '30px' }}>
           <div style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#d4af37', marginBottom: '12px' }}>What Aria Noticed</div>
           <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', fontStyle: 'italic', lineHeight: 1.6 }}>{report.aria_noticed.observation}</div>
-        </div>
-      )}
-
-      {/* Executive Summary */}
-      {report?.executive_summary && (
-        <div style={{ marginBottom: '30px' }}>
-          <h3 style={{ fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', color: '#888', marginBottom: '12px' }}>Summary</h3>
-          <p style={{ fontSize: '15px', lineHeight: 1.7 }}>{report.executive_summary.body}</p>
         </div>
       )}
 

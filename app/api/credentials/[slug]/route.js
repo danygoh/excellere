@@ -1,21 +1,9 @@
-// API Route: Get credential by slug
+// API Route: Get credential by slug - Server-side version
 import { NextResponse } from 'next/server';
-
-// In-memory store for demo (would be database in production)
-const credentialsStore = new Map();
 
 export async function GET(request, { params }) {
   const slug = params.slug;
   
-  // Check store first
-  if (credentialsStore.has(slug)) {
-    return NextResponse.json({
-      success: true,
-      credential: credentialsStore.get(slug)
-    });
-  }
-  
-  // For demo, generate from test profiles
   const testProfiles = [
     { id: 'test-001', first_name: 'Sarah', last_name: 'Chen', role: 'COO', sector: 'FinTech', archetype: 'Strategic Reframer' },
     { id: 'test-002', first_name: 'Marcus', last_name: 'Williams', role: 'VP Innovation', sector: 'Healthcare', archetype: 'Pragmatic Implementer' },
@@ -32,15 +20,19 @@ export async function GET(request, { params }) {
     'Aisha Patel': 'A gift for translating technical complexity into client-relevant language.'
   };
   
-  // Try to find matching profile
   const profile = testProfiles.find(p => {
     const fullName = `${p.first_name} ${p.last_name}`.toLowerCase();
     return slug.includes(fullName.replace(' ', '-').toLowerCase()) ||
            slug.includes(p.first_name.toLowerCase());
   });
   
-  if (profile) {
-    const credential = {
+  if (!profile) {
+    return NextResponse.json({ error: 'Credential not found' }, { status: 404 });
+  }
+  
+  return NextResponse.json({
+    success: true,
+    credential: {
       share_slug: slug,
       profile,
       report: {
@@ -51,7 +43,7 @@ export async function GET(request, { params }) {
           body: `You showed strong capability in applying AI concepts to your ${profile.sector} context.`
         },
         aria_noticed: {
-          observation: ariaObservations[`${profile.first_name} ${profile.last_name}`] || 'Good progress throughout the module.',
+          observation: ariaObservations[`${profile.first_name} ${profile.last_name}`] || 'Good progress.',
           prediction: 'Your next challenge will be applying these concepts at scale.'
         }
       },
@@ -61,13 +53,6 @@ export async function GET(request, { params }) {
         title: 'Harvard University / Hult International Business School',
         comment: 'Excellent progress demonstrating genuine AI fluency and strategic thinking capability.'
       }
-    };
-    
-    // Store for future requests
-    credentialsStore.set(slug, credential);
-    
-    return NextResponse.json({ success: true, credential });
-  }
-  
-  return NextResponse.json({ error: 'Credential not found' }, { status: 404 });
+    }
+  });
 }
