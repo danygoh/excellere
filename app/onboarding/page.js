@@ -1,672 +1,548 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useUser } from '../../context/UserContext'
-import styles from './onboarding.module.css'
-
-// Onboarding steps
-const STEPS = [
-  'identity',    // Step 1: Identity intake
-  'scanning',    // Step 2: AI profile building
-  'mirror',      // Step 3: Mirror moment
-  'calibration', // Step 4: Calibration game
-  'fingerprint',  // Step 5: Cognitive fingerprint
-  'modules',      // Step 6: Module selection
-]
+'use client';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Onboarding() {
-  const router = useRouter()
-  const { user, updateProfile } = useUser()
-  const [currentStep, setCurrentStep] = useState(0)
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [refinedProfile, setRefinedProfile] = useState(null);
   const [formData, setFormData] = useState({
-    // Identity
-    name: '',
+    firstName: '',
+    lastName: '',
+    email: '',
     role: '',
     sector: '',
-    seniority: '',
     goal: '',
-    cvText: '',
-    linkedinUrl: '',
-    // Calibration
-    calibrationAnswers: [],
-    // Mirror corrections
-    corrections: [],
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [profile, setProfile] = useState(null)
+    cvText: ''
+  });
+  const [calibrationAnswers, setCalibrationAnswers] = useState({});
+  const [selectedModules, setSelectedModules] = useState(['ai-native-business-design']);
+  
+  const router = useRouter();
 
-  const step = STEPS[currentStep]
-  const progress = ((currentStep + 1) / STEPS.length) * 100
-
-  const handleNext = () => {
-    // Save profile when completing onboarding
-    if (currentStep === STEPS.length - 1 && profile) {
-      updateProfile({
-        ...formData,
-        cognitiveFingerprint: {
-          archetype: profile.archetype,
-          dimensions: profile.dimensions,
-          strengths: profile.strengths,
-          gaps: profile.gaps
-        }
-      })
+  // Calibration questions (embedded)
+  const calibrationQuestions = [
+    {
+      id: 1,
+      question: "Your CEO says: 'We need to deploy AI or we'll fall behind.' Your first instinct is to ask which question?",
+      options: [
+        { id: 'A', text: "Behind on what, exactly? That answer changes everything." },
+        { id: 'B', text: "Which AI tools are our competitors already using?" },
+        { id: 'C', text: "Do we have the data infrastructure to support AI at scale?" },
+        { id: 'D', text: "What's our risk appetite given regulatory exposure?" }
+      ]
+    },
+    {
+      id: 2,
+      question: "Monzo builds features with AI designing the first version; humans review exceptions. A traditional bank has humans design with AI assisting. What's the strategic difference?",
+      options: [
+        { id: 'A', text: "Monzo is faster and cheaper — a process efficiency advantage" },
+        { id: 'B', text: "They're both using AI — the difference is mostly cultural" },
+        { id: 'C', text: "Monzo's process compounds — every AI improvement raises the whole team. The bank's is bounded by human capacity" },
+        { id: 'D', text: "Monzo takes more risk by reducing human oversight" }
+      ]
+    },
+    {
+      id: 3,
+      question: "A major insurer uses AI to process claims 60% faster with the same accuracy. The Board celebrates. The Strategy Director stays quiet. Why might she be the only one asking the right question?",
+      options: [
+        { id: 'A', text: "She's worried about the jobs that will be displaced" },
+        { id: 'B', text: "She's questioning whether claims processing is still a defensible part of the value chain — or whether AI just made it a commodity anyone can replicate" },
+        { id: 'C', text: "She's concerned accuracy metrics don't capture edge cases" },
+        { id: 'D', text: "She's thinking about the regulatory implications" }
+      ]
     }
-    
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1)
-    } else {
-      // Complete onboarding - go to dashboard
-      router.push('/dashboard')
+  ];
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Step 2: Submit profile for inference
+  const handleProfileSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/onboarding/infer-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: formData.role,
+          sector: formData.sector,
+          goal: formData.goal,
+          cvText: formData.cvText
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProfile(data.profile);
+        setStep(4); // Go to mirror moment
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }
+    setLoading(false);
+  };
 
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
+  // Step 6: Submit calibration for refinement
+  const handleCalibrationSubmit = async () => {
+    setLoading(true);
+    try {
+      const answers = Object.entries(calibrationAnswers).map(([qId, answer]) => ({
+        question_id: parseInt(qId),
+        answer
+      }));
+      
+      const res = await fetch('/api/onboarding/calibrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          initialProfile: profile,
+          answers
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRefinedProfile(data.profile);
+        setStep(7); // Go to module selection
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }
+    setLoading(false);
+  };
 
-  return (
-    <div className={styles.container}>
-      {/* Progress */}
-      <div className={styles.progressContainer}>
-        <div className={styles.progressBar}>
-          <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
-        </div>
-        <div className={styles.progressText}>
-          Step {currentStep + 1} of {STEPS.length}
-        </div>
-      </div>
+  // Complete onboarding
+  const handleComplete = () => {
+    // Save user to localStorage (would be database in production)
+    const user = {
+      id: 'user_' + Date.now(),
+      ...formData,
+      profile: refinedProfile || profile,
+      onboarding_complete: true,
+      modules: selectedModules
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    router.push('/dashboard');
+  };
 
-      {/* Step Content */}
-      <div className={styles.content}>
-        {step === 'identity' && (
-          <IdentityStep 
-            formData={formData} 
-            setFormData={setFormData} 
-            onNext={handleNext}
-          />
-        )}
-        {step === 'scanning' && (
-          <ScanningStep 
-            formData={formData}
-            setProfile={setProfile}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            onNext={handleNext}
-          />
-        )}
-        {step === 'mirror' && (
-          <MirrorStep 
-            profile={profile}
-            formData={formData}
-            setFormData={setFormData}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        )}
-        {step === 'calibration' && (
-          <CalibrationStep
-            formData={formData}
-            setFormData={setFormData}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        )}
-        {step === 'fingerprint' && (
-          <FingerprintStep
-            formData={formData}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        )}
-        {step === 'modules' && (
-          <ModuleStep
-            profile={profile}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        )}
-      </div>
-    </div>
-  )
-}
-
-// Step 1: Identity Intake
-function IdentityStep({ formData, setFormData, onNext }) {
   const sectors = [
     'Financial Services',
     'Healthcare',
     'Technology',
     'Manufacturing',
     'Retail',
-    'Consulting',
-    'Real Estate',
-    'Energy',
+    'Professional Services',
     'Media & Entertainment',
+    'Energy & Utilities',
+    'Real Estate',
     'Other'
-  ]
+  ];
 
   const roles = [
-    'CEO / Managing Director',
-    'CFO',
-    'COO',
-    'CTO / CIO',
-    'CMO',
-    'Chief Strategy Officer',
+    'CEO / Executive',
+    'CFO / Finance Leader',
+    'CTO / Technology Leader',
+    'COO / Operations Leader',
+    'CDO / Chief Data Officer',
     'VP / Director',
-    'Head of',
-    'Partner',
-    'Other'
-  ]
-
-  const seniority = [
-    'Executive (C-Suite)',
-    'SVP / VP',
-    'Director',
     'Senior Manager',
-    'Manager'
-  ]
+    'Board Member',
+    'Founder',
+    'Other'
+  ];
 
   const goals = [
-    'Lead AI transformation',
-    'Understand AI for board discussions',
-    'Identify AI opportunities',
-    'Build AI strategy',
-    'Evaluate AI vendors',
-    'Prepare for AI disruption',
+    'Lead AI transformation at my organisation',
+    'Build AI-native business strategies',
+    'Understand AI for board-level decisions',
+    'Transition to an AI-first role',
+    'Drive innovation with AI',
     'Other'
-  ]
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    onNext()
-  }
+  ];
 
   return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>01</span>
-        <h1>Tell us about yourself</h1>
-        <p>This helps us personalise your learning experience.</p>
+    <div style={{ background: '#000', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
+      {/* Progress Bar */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '3px', background: '#111', zIndex: 100 }}>
+        <div style={{ 
+          height: '100%', 
+          background: '#d4af37', 
+          width: `${(step / 8) * 100}%`,
+          transition: 'width 0.3s ease'
+        }} />
       </div>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Full Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              placeholder="Sarah Chen"
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Your Role</label>
-            <select
-              value={formData.role}
-              onChange={(e) => setFormData({...formData, role: e.target.value})}
-              required
+      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '60px 20px' }}>
+        
+        {/* Step 1: Landing */}
+        {step === 1 && (
+          <div style={{ textAlign: 'center', paddingTop: '40px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px' }}>✦</div>
+            <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '32px', color: '#fff', marginBottom: '16px', letterSpacing: '2px' }}>
+              EXCELLERE
+            </h1>
+            <p style={{ color: '#888', fontSize: '18px', marginBottom: '40px' }}>
+              Build your AI leadership credential
+            </p>
+            
+            <p style={{ color: '#666', fontSize: '14px', lineHeight: '1.8', marginBottom: '40px' }}>
+              A personalized learning programme validated by world-renowned faculty.<br/>
+              Three modules. One assessment. A credential that means something.
+            </p>
+            
+            <button 
+              onClick={() => setStep(2)}
+              style={{ background: '#d4af37', color: '#000', border: 'none', padding: '16px 40px', fontSize: '14px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer' }}
             >
-              <option value="">Select role...</option>
-              {roles.map(r => (
-                <option key={r} value={r}>{r}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Sector / Industry</label>
-            <select
-              value={formData.sector}
-              onChange={(e) => setFormData({...formData, sector: e.target.value})}
-              required
-            >
-              <option value="">Select sector...</option>
-              {sectors.map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Seniority Level</label>
-            <select
-              value={formData.seniority}
-              onChange={(e) => setFormData({...formData, seniority: e.target.value})}
-              required
-            >
-              <option value="">Select level...</option>
-              {seniority.map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>What brings you to Excellere?</label>
-          <select
-            value={formData.goal}
-            onChange={(e) => setFormData({...formData, goal: e.target.value})}
-            required
-          >
-            <option value="">Select your primary goal...</option>
-            {goals.map(g => (
-              <option key={g} value={g}>{g}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className={styles.formGroup}>
-          <label>CV / Resume (Optional)</label>
-          <textarea
-            value={formData.cvText}
-            onChange={(e) => setFormData({...formData, cvText: e.target.value})}
-            placeholder="Paste your CV text here, or upload below..."
-            rows={4}
-          />
-          
-          {/* File Upload */}
-          <div className={styles.uploadBox}>
-            <input
-              type="file"
-              id="cv-upload"
-              accept=".pdf,.docx,.doc,.txt"
-              onChange={async (e) => {
-                const file = e.target.files[0]
-                if (!file) return
-                
-                try {
-                  let text = ''
-                  if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-                    text = await file.text()
-                  } else if (file.name.endsWith('.pdf')) {
-                    alert('For PDF files, please copy-paste the text content. PDF parsing requires server-side processing.')
-                    return
-                  } else if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
-                    alert('For Word documents, please copy-paste the text content. Doc parsing requires server-side processing.')
-                    return
-                  }
-                  
-                  if (text) {
-                    setFormData({...formData, cvText: text})
-                  }
-                } catch (err) {
-                  console.error('Error reading file:', err)
-                  alert('Error reading file. Please copy-paste your CV text instead.')
-                }
-              }}
-              style={{ display: 'none' }}
-            />
-            <label htmlFor="cv-upload" className={styles.uploadLabel}>
-              <span className={styles.uploadIcon}>📎</span>
-              <span>Upload CV (PDF, Word, or Text)</span>
-            </label>
-            <p className={styles.uploadHint}>Or drag and drop a file</p>
-          </div>
-        </div>
-
-        <button type="submit" className={styles.btnPrimary}>
-          Continue
-          <span>→</span>
-        </button>
-      </form>
-    </div>
-  )
-}
-
-// Step 2: Scanning
-function ScanningStep({ formData, setProfile, isLoading, setIsLoading, onNext }) {
-  const [scanProgress, setScanProgress] = useState(0)
-
-  useEffect(() => {
-    if (isLoading) {
-      // Simulate scanning animation
-      const interval = setInterval(() => {
-        setScanProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval)
-            // Set mock profile
-            setProfile({
-              archetype: 'Strategic Reframer',
-              strengths: [
-                'Deep industry knowledge',
-                'Board-level communication',
-                'Strategic thinking'
-              ],
-              gaps: [
-                'Technical AI foundations',
-                'Data architecture'
-              ],
-              tags: ['Finance', 'Strategy', 'Transformation'],
-              dimensions: {
-                strategic_vs_operational: 85,
-                conceptual_vs_technical: 70,
-                single_vs_double_loop: 90,
-                challenge_vs_confirmation: 75
-              }
-            })
-            setTimeout(onNext, 1000)
-            return 100
-          }
-          return prev + 2
-        })
-      }, 50)
-    }
-  }, [isLoading])
-
-  const handleStartScan = () => {
-    setIsLoading(true)
-  }
-
-  return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>02</span>
-        <h1>Building your profile</h1>
-        <p>Our AI is analysing your background to create a personalized learning path.</p>
-      </div>
-
-      {!isLoading ? (
-        <div className={styles.scanStart}>
-          <button onClick={handleStartScan} className={styles.btnPrimary}>
-            Start Analysis
-            <span>→</span>
-          </button>
-        </div>
-      ) : (
-        <div className={styles.scanning}>
-          <div className={styles.scanVisual}>
-            <div className={styles.scanCircle}>
-              <div className={styles.scanInner}></div>
-            </div>
-          </div>
-          <div className={styles.scanProgress}>
-            <div className={styles.scanProgressText}>
-              {scanProgress < 30 && 'Analysing professional background...'}
-              {scanProgress >= 30 && scanProgress < 60 && 'Mapping cognitive patterns...'}
-              {scanProgress >= 60 && scanProgress < 90 && 'Identifying knowledge gaps...'}
-              {scanProgress >= 90 && 'Finalising profile...'}
-            </div>
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill} style={{ width: `${scanProgress}%` }}></div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Step 3: Mirror Moment
-function MirrorStep({ profile, formData, setFormData, onNext, onBack }) {
-  if (!profile) return null
-
-  return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>03</span>
-        <h1>This is what we think</h1>
-        <p>Does this feel right? Let us know if we'd better.</p>
-      </div>
-
-      <div className={styles.mirrorCard}>
-        <div className={styles.archetype}>
-          <div className={styles.archetypeIcon}>🎯</div>
-          <h2>{profile.archetype}</h2>
-        </div>
-
-        <div className={styles.profileDetails}>
-          <div className={styles.profileSection}>
-            <h4>Your Strengths</h4>
-            <ul>
-              {profile.strengths.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={styles.profileSection}>
-            <h4>Knowledge Gaps</h4>
-            <ul>
-              {profile.gaps.map((g, i) => (
-                <li key={i}>{g}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={styles.profileTags}>
-            {profile.tags.map((tag, i) => (
-              <span key={i} className={styles.tag}>{tag}</span>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.mirrorActions}>
-          <button onClick={onBack} className={styles.btnSecondary}>
-            Adjust Profile
-          </button>
-          <button onClick={onNext} className={styles.btnPrimary}>
-            Looks Right
-            <span>→</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step 4: Calibration Game
-function CalibrationStep({ formData, setFormData, onNext, onBack }) {
-  const questions = [
-    {
-      id: 1,
-      question: "When evaluating a new technology for your business, what's your first step?",
-      options: [
-        "Request a detailed technical demo from the vendor",
-        "Ask peers in your network about their experience",
-        "Look for case studies in your specific industry",
-        "Estimate the ROI and payback period yourself"
-      ]
-    },
-    {
-      id: 2,
-      question: "How do you typically approach strategic decisions?",
-      options: [
-        "Data-driven analysis with clear metrics",
-        "Board discussions and consensus building",
-        "Pilot programs to test assumptions",
-        "Strategic intuition backed by experience"
-      ]
-    },
-    {
-      id: 3,
-      question: "What's your biggest challenge with AI?",
-      options: [
-        "Understanding what's technically possible",
-        "Building business case for investment",
-        "Change management and adoption",
-        "Finding the right use cases"
-      ]
-    }
-  ]
-
-  const currentQ = formData.calibrationAnswers.length
-  const question = questions[currentQ]
-
-  const handleAnswer = (answer) => {
-    setFormData({
-      ...formData,
-      calibrationAnswers: [...formData.calibrationAnswers, { questionId: question.id, answer }]
-    })
-
-    if (currentQ >= questions.length - 1) {
-      onNext()
-    }
-  }
-
-  return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>04</span>
-        <h1>Calibration Questions</h1>
-        <p>These aren't tests — they help us understand how you think.</p>
-      </div>
-
-      <div className={styles.calibration}>
-        <div className={styles.questionProgress}>
-          Question {currentQ + 1} of {questions.length}
-        </div>
-
-        <h3 className={styles.questionText}>{question.question}</h3>
-
-        <div className={styles.options}>
-          {question.options.map((option, i) => (
-            <button
-              key={i}
-              className={styles.optionBtn}
-              onClick={() => handleAnswer(option)}
-            >
-              {option}
+              BEGIN →
             </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step 5: Cognitive Fingerprint
-function FingerprintStep({ formData, onNext, onBack }) {
-  const archetype = 'Strategic Reframer'
-
-  const dimensions = [
-    { label: 'Strategic vs Operational', value: 85, color: 'var(--accent-teal)' },
-    { label: 'Conceptual vs Technical', value: 70, color: 'var(--accent-violet)' },
-    { label: 'Single vs Double Loop', value: 90, color: 'var(--accent-gold)' },
-    { label: 'Challenge vs Confirmation', value: 75, color: 'var(--accent-teal)' },
-  ]
-
-  return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>05</span>
-        <h1>Your Cognitive Fingerprint</h1>
-        <p>Your unique thinking pattern that shapes how you learn.</p>
-      </div>
-
-      <div className={styles.fingerprint}>
-        <div className={styles.archetypeBadge}>
-          <span className={styles.archetypeIcon}>🎯</span>
-          <span>{archetype}</span>
-        </div>
-
-        <div className={styles.dimensions}>
-          {dimensions.map((dim, i) => (
-            <div key={i} className={styles.dimension}>
-              <div className={styles.dimensionHeader}>
-                <span>{dim.label}</span>
-                <span>{dim.value}%</span>
-              </div>
-              <div className={styles.dimensionBar}>
-                <div 
-                  className={styles.dimensionFill} 
-                  style={{ width: `${dim.value}%`, background: dim.color }}
-                ></div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className={styles.fingerprintNote}>
-          <p>You learn best through strategic frameworks and peer discussions. 
-          Technical details should be translated to business outcomes.</p>
-        </div>
-
-        <div className={styles.fingerprintActions}>
-          <button onClick={onBack} className={styles.btnSecondary}>
-            Back
-          </button>
-          <button onClick={onNext} className={styles.btnPrimary}>
-            Continue
-            <span>→</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step 6: Module Selection
-function ModuleStep({ profile, onNext, onBack }) {
-  const modules = [
-    {
-      id: 1,
-      name: 'AI-Native Business Design',
-      description: 'Audit which processes are AI-native vs augmented',
-      outcome: 'AI-Native Firm Audit',
-      tailored: 'Tailored for strategic leaders in Financial Services',
-      icon: '🎯'
-    },
-    {
-      id: 2,
-      name: 'Double Loop Strategy',
-      description: 'Master the strategy framework for AI transformation',
-      outcome: 'Double Loop Strategy Canvas',
-      tailored: 'Focuses on board-level communication',
-      icon: '🔄'
-    },
-    {
-      id: 3,
-      name: 'Agentic AI',
-      description: 'Identify opportunities for agentic AI in your workflows',
-      outcome: 'Agent Opportunity Map',
-      tailored: 'Practical implementation focus',
-      icon: '🤖'
-    }
-  ]
-
-  return (
-    <div className={styles.step}>
-      <div className={styles.stepHeader}>
-        <span className={styles.stepNumber}>06</span>
-        <h1>Your Personalized Modules</h1>
-        <p>Based on your profile, these are your recommended starting points.</p>
-      </div>
-
-      <div className={styles.modulesList}>
-        {modules.map((mod) => (
-          <div key={mod.id} className={styles.moduleOption}>
-            <div className={styles.moduleIcon}>{mod.icon}</div>
-            <div className={styles.moduleContent}>
-              <h3>{mod.name}</h3>
-              <p>{mod.description}</p>
-              <div className={styles.moduleOutcome}>
-                <span>Outcome:</span> {mod.outcome}
-              </div>
-              <div className={styles.moduleTailored}>
-                ✦ {mod.tailored}
-              </div>
-            </div>
-            <button className={styles.btnSelect}>Select</button>
           </div>
-        ))}
-      </div>
+        )}
 
-      <div className={styles.moduleActions}>
-        <button onClick={onBack} className={styles.btnSecondary}>
-          Back
-        </button>
-        <button onClick={onNext} className={styles.btnPrimary}>
-          Start Learning
-          <span>→</span>
-        </button>
+        {/* Step 2: Identity Intake */}
+        {step === 2 && (
+          <div>
+            <h2 style={{ color: '#fff', fontSize: '24px', marginBottom: '30px', textAlign: 'center' }}>
+              Tell us about yourself
+            </h2>
+            
+            <div style={{ display: 'grid', gap: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <input
+                  name="firstName"
+                  placeholder="First name"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: '#fff', fontSize: '14px' }}
+                />
+                <input
+                  name="lastName"
+                  placeholder="Last name"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: '#fff', fontSize: '14px' }}
+                />
+              </div>
+              
+              <input
+                name="email"
+                type="email"
+                placeholder="Work email"
+                value={formData.email}
+                onChange={handleInputChange}
+                style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: '#fff', fontSize: '14px' }}
+              />
+              
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+                style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: formData.role ? '#fff' : '#666', fontSize: '14px' }}
+              >
+                <option value="">Select your role</option>
+                {roles.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+              
+              <select
+                name="sector"
+                value={formData.sector}
+                onChange={handleInputChange}
+                style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: formData.sector ? '#fff' : '#666', fontSize: '14px' }}
+              >
+                <option value="">Select your sector</option>
+                {sectors.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+              
+              <select
+                name="goal"
+                value={formData.goal}
+                onChange={handleInputChange}
+                style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: formData.goal ? '#fff' : '#666', fontSize: '14px' }}
+              >
+                <option value="">What do you want to achieve?</option>
+                {goals.map(g => <option key={g} value={g}>{g}</option>)}
+              </select>
+              
+              <textarea
+                name="cvText"
+                placeholder="Brief background (optional): years of experience, key achievements, current responsibilities..."
+                value={formData.cvText}
+                onChange={handleInputChange}
+                rows={4}
+                style={{ background: '#0a0a0a', border: '1px solid #222', padding: '14px', color: '#fff', fontSize: '14px', resize: 'none' }}
+              />
+            </div>
+            
+            <button 
+              onClick={handleProfileSubmit}
+              disabled={loading || !formData.role || !formData.sector || !formData.goal}
+              style={{ 
+                background: '#d4af37', 
+                color: '#000', 
+                border: 'none', 
+                padding: '16px 40px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                cursor: 'pointer',
+                marginTop: '30px',
+                width: '100%',
+                opacity: loading || !formData.role || !formData.sector || !formData.goal ? 0.5 : 1
+              }}
+            >
+              {loading ? 'ANALYSING...' : 'CONTINUE →'}
+            </button>
+          </div>
+        )}
+
+        {/* Step 3: Scanning Animation */}
+        {step === 3 && (
+          <div style={{ textAlign: 'center', paddingTop: '60px' }}>
+            <div style={{ 
+              width: '120px', 
+              height: '120px', 
+              border: '2px solid #d4af37', 
+              borderRadius: '50%', 
+              margin: '0 auto 30px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <div style={{ 
+                width: '80px', 
+                height: '80px', 
+                border: '2px solid #d4af37', 
+                borderRadius: '50%',
+                animation: 'pulse 2s infinite'
+              }} />
+            </div>
+            <p style={{ color: '#d4af37', fontSize: '14px', letterSpacing: '2px' }}>
+              ARIA IS ANALYSING YOUR PROFILE
+            </p>
+            <p style={{ color: '#444', fontSize: '12px', marginTop: '20px' }}>
+              Learning how you think...
+            </p>
+          </div>
+        )}
+
+        {/* Step 4: Mirror Moment */}
+        {step === 4 && profile && (
+          <div>
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+              <span style={{ color: '#d4af37', fontSize: '14px', letterSpacing: '2px' }}>YOUR THINKING PROFILE</span>
+            </div>
+            
+            <div style={{ 
+              background: '#0a0a0a', 
+              border: '1px solid #222', 
+              padding: '30px',
+              borderRadius: '8px',
+              marginBottom: '30px'
+            }}>
+              <h3 style={{ color: '#d4af37', fontSize: '28px', marginBottom: '10px', fontFamily: 'Playfair Display, serif' }}>
+                {profile.archetype}
+              </h3>
+              <p style={{ color: '#888', fontSize: '14px', lineHeight: '1.8', marginBottom: '20px' }}>
+                {profile.archetype_description}
+              </p>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
+                <div>
+                  <div style={{ color: '#444', fontSize: '10px', letterSpacing: '1px', marginBottom: '4px' }}>STRATEGIC VS OPERATIONAL</div>
+                  <div style={{ color: '#fff', fontSize: '20px' }}>{profile.dimensions?.strategic_vs_operational || 50}%</div>
+                </div>
+                <div>
+                  <div style={{ color: '#444', fontSize: '10px', letterSpacing: '1px', marginBottom: '4px' }}>DOUBLE LOOP</div>
+                  <div style={{ color: '#fff', fontSize: '20px' }}>{profile.dimensions?.single_vs_double_loop || 50}%</div>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => setStep(5)}
+              style={{ background: '#d4af37', color: '#000', border: 'none', padding: '16px 40px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', width: '100%' }}
+            >
+              THAT'S ME — CONTINUE →
+            </button>
+            
+            <button 
+              onClick={() => setStep(2)}
+              style={{ background: 'transparent', color: '#666', border: 'none', padding: '16px', fontSize: '12px', cursor: 'pointer', width: '100%', marginTop: '10px' }}
+            >
+              Not quite right? Go back →
+            </button>
+          </div>
+        )}
+
+        {/* Step 5: Calibration Game */}
+        {step === 5 && (
+          <div>
+            <p style={{ color: '#444', fontSize: '12px', marginBottom: '20px', textAlign: 'center' }}>
+              Three quick questions to refine your profile
+            </p>
+            
+            {calibrationQuestions.map((q, idx) => (
+              <div key={q.id} style={{ marginBottom: '30px' }}>
+                <p style={{ color: '#fff', fontSize: '14px', marginBottom: '16px' }}>
+                  <span style={{ color: '#d4af37', marginRight: '8px' }}>{idx + 1}.</span>
+                  {q.question}
+                </p>
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  {q.options.map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setCalibrationAnswers({ ...calibrationAnswers, [q.id]: opt.id })}
+                      style={{ 
+                        background: calibrationAnswers[q.id] === opt.id ? '#d4af37' : '#0a0a0a',
+                        color: calibrationAnswers[q.id] === opt.id ? '#000' : '#888',
+                        border: `1px solid ${calibrationAnswers[q.id] === opt.id ? '#d4af37' : '#222'}`,
+                        padding: '14px',
+                        fontSize: '13px',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {opt.text}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+            
+            <button 
+              onClick={handleCalibrationSubmit}
+              disabled={loading || Object.keys(calibrationAnswers).length < 3}
+              style={{ 
+                background: '#d4af37', 
+                color: '#000', 
+                border: 'none', 
+                padding: '16px 40px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                cursor: 'pointer',
+                width: '100%',
+                opacity: loading || Object.keys(calibrationAnswers).length < 3 ? 0.5 : 1
+              }}
+            >
+              {loading ? 'REFINING...' : 'COMPLETE CALIBRATION →'}
+            </button>
+          </div>
+        )}
+
+        {/* Step 6: Fingerprint Reveal */}
+        {step === 6 && refinedProfile && (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px' }}>🎯</div>
+            <h2 style={{ color: '#fff', fontSize: '24px', marginBottom: '20px' }}>
+              Your Cognitive Fingerprint
+            </h2>
+            
+            <div style={{ 
+              background: '#0a0a0a', 
+              border: '1px solid #d4af37', 
+              padding: '24px',
+              borderRadius: '8px',
+              marginBottom: '24px',
+              textAlign: 'left'
+            }}>
+              <p style={{ color: '#d4af37', fontSize: '14px', marginBottom: '12px' }}>
+                Your insight:
+              </p>
+              <p style={{ color: '#fff', fontSize: '16px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                "{refinedProfile.fingerprint_insight}"
+              </p>
+            </div>
+            
+            <button 
+              onClick={() => setStep(7)}
+              style={{ background: '#d4af37', color: '#000', border: 'none', padding: '16px 40px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
+            >
+              CONTINUE →
+            </button>
+          </div>
+        )}
+
+        {/* Step 7: Module Selection */}
+        {step === 7 && (
+          <div>
+            <h2 style={{ color: '#fff', fontSize: '20px', marginBottom: '20px', textAlign: 'center' }}>
+              Choose your modules
+            </h2>
+            <p style={{ color: '#666', fontSize: '13px', marginBottom: '30px', textAlign: 'center' }}>
+              We recommend the full programme, but you can choose
+            </p>
+            
+            <div style={{ display: 'grid', gap: '12px' }}>
+              {[
+                { id: 'ai-native-business-design', name: 'AI-Native Business Design', desc: 'Audit your processes for AI-native vs augmented', icon: '🎯' },
+                { id: 'double-loop-strategy', name: 'Double Loop Strategy', desc: 'Master the strategy framework for AI transformation', icon: '🔄' },
+                { id: 'agentic-ai', name: 'Agentic AI', desc: 'Identify opportunities for autonomous AI agents', icon: '🤖' }
+              ].map(mod => (
+                <label
+                  key={mod.id}
+                  style={{ 
+                    background: selectedModules.includes(mod.id) ? '#0a0a0a' : '#050505',
+                    border: `1px solid ${selectedModules.includes(mod.id) ? '#d4af37' : '#222'}`,
+                    padding: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedModules.includes(mod.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedModules([...selectedModules, mod.id]);
+                      } else {
+                        setSelectedModules(selectedModules.filter(m => m !== mod.id));
+                      }
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                  <span style={{ fontSize: '24px', marginRight: '12px' }}>{mod.icon}</span>
+                  <div>
+                    <div style={{ color: '#fff', fontSize: '14px' }}>{mod.name}</div>
+                    <div style={{ color: '#666', fontSize: '12px' }}>{mod.desc}</div>
+                  </div>
+                  {selectedModules.includes(mod.id) && (
+                    <span style={{ marginLeft: 'auto', color: '#d4af37' }}>✓</span>
+                  )}
+                </label>
+              ))}
+            </div>
+            
+            <button 
+              onClick={handleComplete}
+              disabled={selectedModules.length === 0}
+              style={{ 
+                background: '#d4af37', 
+                color: '#000', 
+                border: 'none', 
+                padding: '16px 40px', 
+                fontSize: '14px', 
+                fontWeight: 600, 
+                cursor: 'pointer',
+                width: '100%',
+                marginTop: '30px',
+                opacity: selectedModules.length === 0 ? 0.5 : 1
+              }}
+            >
+              START LEARNING →
+            </button>
+          </div>
+        )}
+
       </div>
+      
+      <style jsx global>{`
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.5; }
+        }
+      `}</style>
     </div>
-  )
+  );
 }
