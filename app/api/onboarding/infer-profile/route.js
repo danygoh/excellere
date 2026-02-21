@@ -61,38 +61,48 @@ Return this exact JSON:
     // If Supabase is available, create user and profile
     if (supabase && email) {
       try {
-        // Create user
+        // Create or update user
         const { data: user, error: userError } = await supabase
           .from('users')
-          .insert({
+          .upsert({
             email,
             first_name: firstName,
             last_name: lastName,
             role: 'learner',
             sector,
-            job_title: role
-          })
+            job_title: role,
+            password_hash: 'demo'
+          }, { onConflict: 'email' })
           .select()
           .single();
         
         if (!userError && user) {
-          // Create learner profile
-          await supabase
+          // Check if profile exists
+          const { data: existingProfile } = await supabase
             .from('learner_profiles')
-            .insert({
-              user_id: user.id,
-              archetype: profile.archetype,
-              archetype_description: profile.archetype_description,
-              ai_prediction: profile.ai_prediction,
-              profile_tags: profile.profile_tags,
-              strategic_vs_operational: profile.dimensions?.strategic_vs_operational,
-              conceptual_vs_technical: profile.dimensions?.conceptual_vs_technical,
-              single_vs_double_loop: profile.dimensions?.single_vs_double_loop,
-              challenge_vs_confirmation: profile.dimensions?.challenge_vs_confirmation,
-              onboarding_step: 4,
-              primary_goal: goal,
-              cv_text: cvText
-            });
+            .select('id')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (!existingProfile) {
+            // Create learner profile
+            await supabase
+              .from('learner_profiles')
+              .insert({
+                user_id: user.id,
+                archetype: profile.archetype,
+                archetype_description: profile.archetype_description,
+                ai_prediction: profile.ai_prediction,
+                profile_tags: profile.profile_tags,
+                strategic_vs_operational: profile.dimensions?.strategic_vs_operational,
+                conceptual_vs_technical: profile.dimensions?.conceptual_vs_technical,
+                single_vs_double_loop: profile.dimensions?.single_vs_double_loop,
+                challenge_vs_confirmation: profile.dimensions?.challenge_vs_confirmation,
+                onboarding_step: 4,
+                primary_goal: goal,
+                cv_text: cvText
+              });
+          }
           
           profile.userId = user.id;
         }
