@@ -1,7 +1,7 @@
 // API Route: Onboarding - Profile Inference
-// Called after step 2 (identity intake) to infer cognitive profile
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import supabase from '@/lib/supabase';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
@@ -9,15 +9,13 @@ const anthropic = new Anthropic({
 
 export async function POST(request) {
   try {
-    const { role, sector, goal, cvText } = await request.json();
+    const { role, sector, goal, cvText, firstName, lastName, email } = await request.json();
     
     if (!role || !sector || !goal) {
-      return NextResponse.json({
-        error: 'Missing required fields: role, sector, goal'
-      }, { status: 400 });
+      return NextResponse.json({ error: 'Missing required fields: role, sector, goal' }, { status: 400 });
     }
 
-    const systemPrompt = `You are an expert at inferring professional and cognitive profiles from sparse data. You have deep knowledge of how senior leaders in different sectors think, what they typically know and don't know about AI, and how their backgrounds shape their reasoning patterns. Your output personalises an AI learning platform. Be specific — generic profiles are useless. Draw on what you know about how people in this role and sector actually think. Return valid JSON only. No preamble, no markdown, just the JSON object.`;
+    const systemPrompt = `You are an expert at inferring professional and cognitive profiles from sparse data. Return valid JSON only.`;
 
     const userPrompt = `
 Infer a detailed cognitive and professional profile for this learner.
@@ -60,8 +58,48 @@ Return this exact JSON:
     
     const profile = JSON.parse(content);
     
-    // Store in memory (would be database in production)
-    // For now, return the profile to frontend
+    // If Supabase is available, create user and profile
+    if (supabase && email) {
+      try {
+        // Create user
+        const { data: user, error: userError } = await supabase
+          .from('users')
+          .insert({
+            email,
+            first_name: firstName,
+            last_name: lastName,
+            role: 'learner',
+            sector,
+            job_title: role
+          })
+          .select()
+          .single();
+        
+        if (!userError && user) {
+          // Create learner profile
+          await supabase
+            .from('learner_profiles')
+            .insert({
+              user_id: user.id,
+              archetype: profile.archetype,
+              archetype_description: profile.archetype_description,
+              ai_prediction: profile.ai_prediction,
+              profile_tags: profile.profile_tags,
+              strategic_vs_operational: profile.dimensions?.strategic_vs_operational,
+              conceptual_vs_technical: profile.dimensions?.conceptual_vs_technical,
+              single_vs_double_loop: profile.dimensions?.single_vs_double_loop,
+              challenge_vs_confirmation: profile.dimensions?.challenge_vs_confirmation,
+              onboarding_step: 4,
+              primary_goal: goal,
+              cv_text: cvText
+            });
+          
+          profile.userId = user.id;
+        }
+      } catch (e) {
+        console.log('Supabase insert error:', e);
+      }
+    }
     
     return NextResponse.json({
       success: true,
@@ -73,8 +111,6 @@ Return this exact JSON:
 
   } catch (error) {
     console.error('Profile inference error:', error);
-    return NextResponse.json({
-      error: error.message
-    }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
