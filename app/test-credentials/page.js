@@ -1,3 +1,4 @@
+'use client';
 // Test page for credential system
 import { useState } from 'react';
 
