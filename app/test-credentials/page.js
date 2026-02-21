@@ -56,26 +56,13 @@ export default function CredentialTest() {
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif' }}>
-      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '10px' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#fff', minHeight: '100vh' }}>
+      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', marginBottom: '10px', color: '#1a1a2e' }}>
         🎓 Excellere Credential System - Test
       </h1>
       <p style={{ color: '#666', marginBottom: '30px' }}>
-        Test the "What Aria Noticed" section with five real profiles. The key test: does it feel specific to this person?
+        Test the "What Aria Noticed" section with five real profiles.
       </p>
-
-      {!profiles.length && !loading && (
-        <button 
-          onClick={loadProfiles}
-          style={{
-            background: '#e94560', color: 'white', border: 'none',
-            padding: '14px 28px', borderRadius: '6px', fontSize: '15px',
-            cursor: 'pointer'
-          }}
-        >
-          Load Test Profiles
-        </button>
-      )}
 
       {loading && <p style={{ color: '#666' }}>Loading...</p>}
       {error && <p style={{ color: '#c00', background: '#fee', padding: '12px', borderRadius: '6px' }}>{error}</p>}
@@ -83,15 +70,14 @@ export default function CredentialTest() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginTop: '30px' }}>
         {profiles.map(p => (
           <div key={p.id} style={{
-            background: 'white', padding: '24px', borderRadius: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+            background: '#fff', padding: '24px', borderRadius: '12px',
+            border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
           }}>
-            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', marginBottom: '4px' }}>{p.name}</h3>
+            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', marginBottom: '4px', color: '#1a1a2e' }}>{p.name}</h3>
             <p style={{ color: '#e94560', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{p.role}</p>
             <p style={{ color: '#888', fontSize: '13px', marginBottom: '12px' }}>{p.sector}</p>
             <span style={{
-              background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-              color: 'white', padding: '6px 14px', borderRadius: '20px',
+              background: '#f0f0f0', color: '#333', padding: '6px 14px', borderRadius: '20px',
               fontSize: '11px', fontWeight: '500', display: 'inline-block'
             }}>
               {p.archetype}
@@ -100,7 +86,7 @@ export default function CredentialTest() {
               onClick={() => generateReport(p.id)}
               style={{
                 display: 'block', width: '100%', marginTop: '16px',
-                background: '#e94560', color: 'white', border: 'none',
+                background: '#e94560', color: '#fff', border: 'none',
                 padding: '10px', borderRadius: '6px', fontSize: '13px',
                 cursor: 'pointer'
               }}
@@ -112,22 +98,21 @@ export default function CredentialTest() {
       </div>
 
       {result && (
-        <div style={{ marginTop: '40px', background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+        <div style={{ marginTop: '40px', background: '#fff', padding: '30px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px' }}>{result.report?.report_title || 'Report'}</h2>
-            <span style={{ background: '#e94560', color: 'white', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
+            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px', color: '#1a1a2e' }}>{result.report?.report_title || 'Report'}</h2>
+            <span style={{ background: '#e94560', color: '#fff', padding: '8px 16px', borderRadius: '20px', fontWeight: '600' }}>
               Score: {result.report?.overall_score || 'N/A'}
             </span>
           </div>
 
           <div style={{
-            background: 'linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%)',
-            borderLeft: '4px solid #d4af37', padding: '24px', margin: '20px 0'
+            background: '#fffbf0', borderLeft: '4px solid #d4af37', padding: '24px', margin: '20px 0'
           }}>
             <div style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#d4af37', marginBottom: '12px' }}>
               What Aria Noticed
             </div>
-            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6' }}>
+            <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontStyle: 'italic', lineHeight: '1.6', color: '#333' }}>
               {result.report?.aria_noticed?.observation || 'No observation'}
             </div>
             <div style={{ marginTop: '16px', fontSize: '14px', color: '#666', fontStyle: 'italic' }}>
@@ -135,12 +120,12 @@ export default function CredentialTest() {
             </div>
           </div>
 
-          <p><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
+          <p style={{ color: '#333' }}><strong>Headline:</strong> {result.report?.executive_summary?.headline || 'N/A'}</p>
           
           {result.badges_earned && result.badges_earned.length > 0 && (
             <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {result.badges_earned.map(b => (
-                <span key={b} style={{ background: '#1a1a2e', color: 'white', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
+                <span key={b} style={{ background: '#f0f0f0', color: '#333', padding: '6px 12px', borderRadius: '16px', fontSize: '12px' }}>
                   {b}
                 </span>
               ))}
@@ -157,7 +142,7 @@ export default function CredentialTest() {
                 href={result.public_url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                style={{ display: 'inline-block', background: '#2ecc71', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: 500 }}
+                style={{ display: 'inline-block', background: '#2ecc71', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
               >
                 View Public Credential →
               </a>
@@ -165,7 +150,7 @@ export default function CredentialTest() {
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://excellere.vercel.app' + result.public_url)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'inline-block', background: '#0077b5', color: 'white', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: 500 }}
+                style={{ display: 'inline-block', background: '#0077b5', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontWeight: '500' }}
               >
                 Share on LinkedIn
               </a>

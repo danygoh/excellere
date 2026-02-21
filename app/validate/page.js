@@ -1,5 +1,4 @@
 // Validator Dashboard Page
-import { NextResponse } from 'next/server';
 
 // Validators data
 const validators = [
@@ -41,11 +40,11 @@ export default async function ValidatorDashboard({ searchParams }) {
   const validator = validators.find(v => v.id === validatorId);
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 20px', fontFamily: 'Inter, sans-serif', background: '#fff', minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ marginBottom: '40px' }}>
-        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, letterSpacing: '4px', marginBottom: '8px' }}>EXCELLERE</div>
-        <h1 style={{ fontSize: '24px', marginBottom: '8px' }}>Validator Dashboard</h1>
+        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, letterSpacing: '4px', marginBottom: '8px', color: '#1a1a2e' }}>EXCELLERE</div>
+        <h1 style={{ fontSize: '24px', marginBottom: '8px', color: '#1a1a2e' }}>Validator Dashboard</h1>
         <p style={{ color: '#666' }}>Review and validate learner assessment reports</p>
       </div>
 
@@ -60,16 +59,17 @@ export default async function ValidatorDashboard({ searchParams }) {
                 href={`/validate?validator=${v.id}`}
                 style={{ 
                   display: 'block',
-                  background: 'white', 
+                  background: '#fff', 
                   padding: '24px', 
                   borderRadius: '12px', 
                   textDecoration: 'none',
-                  color: 'inherit',
+                  color: '#333',
+                  border: '1px solid #eee',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   textAlign: 'center'
                 }}
               >
-                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600, margin: '0 auto 16px' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#f0f0f0', color: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600, margin: '0 auto 16px' }}>
                   {v.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div style={{ fontWeight: 600, fontSize: '16px' }}>{v.name}</div>
@@ -85,34 +85,34 @@ export default async function ValidatorDashboard({ searchParams }) {
           <a href="/validate" style={{ display: 'inline-block', marginBottom: '20px', color: '#666', textDecoration: 'none', fontSize: '14px' }}>← Select different validator</a>
           
           {/* Validator Info */}
-          <div style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', color: 'white', padding: '24px', borderRadius: '12px', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600 }}>
+          <div style={{ background: '#f8f9fa', border: '1px solid #eee', padding: '24px', borderRadius: '12px', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#e94560', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 600 }}>
               {validator.name.split(' ').map(n => n[0]).join('')}
             </div>
             <div>
-              <div style={{ fontSize: '20px', fontWeight: 600 }}>{validator.name}</div>
-              <div style={{ fontSize: '14px', opacity: 0.8 }}>{validator.title}</div>
+              <div style={{ fontSize: '20px', fontWeight: 600, color: '#1a1a2e' }}>{validator.name}</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>{validator.title}</div>
             </div>
-            <div style={{ marginLeft: 'auto', background: 'rgba(255,255,255,0.2)', padding: '8px 16px', borderRadius: '20px', fontSize: '12px' }}>
+            <div style={{ marginLeft: 'auto', background: '#fff3cd', color: '#856404', padding: '8px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>
               {pendingReports.length} reports pending
             </div>
           </div>
 
           {/* Queue */}
-          <h2 style={{ fontSize: '18px', marginBottom: '20px' }}>Reports Awaiting Validation</h2>
+          <h2 style={{ fontSize: '18px', marginBottom: '20px', color: '#1a1a2e' }}>Reports Awaiting Validation</h2>
           
           {pendingReports.length === 0 ? (
             <p style={{ color: '#666', textAlign: 'center', padding: '40px' }}>No reports pending validation.</p>
           ) : (
             <div style={{ display: 'grid', gap: '16px' }}>
               {pendingReports.map(report => (
-                <div key={report.id} style={{ background: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                <div key={report.id} style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '18px' }}>{report.learner_name}</div>
+                      <div style={{ fontWeight: 600, fontSize: '18px', color: '#1a1a2e' }}>{report.learner_name}</div>
                       <div style={{ fontSize: '14px', color: '#666' }}>{report.role}</div>
                     </div>
-                    <span style={{ background: '#f39c12', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 500 }}>
+                    <span style={{ background: '#fff3cd', color: '#856404', padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 500 }}>
                       Pending
                     </span>
                   </div>
@@ -122,11 +122,11 @@ export default async function ValidatorDashboard({ searchParams }) {
                     <strong>Submitted:</strong> {report.submitted_at}
                   </div>
                   
-                  <div style={{ background: '#f8f9fa', padding: '12px', borderRadius: '8px', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+                  <div style={{ background: '#f8f9fa', padding: '12px', borderRadius: '8px', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic', color: '#555' }}>
                     "{report.report_summary}"
                   </div>
                   
-                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#e94560', color: 'white', padding: '12px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: 500, textDecoration: 'none' }}>
+                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#e94560', color: '#fff', padding: '12px 24px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                     Review & Validate →
                   </a>
                 </div>
@@ -137,7 +137,7 @@ export default async function ValidatorDashboard({ searchParams }) {
       )}
 
       {/* Instructions */}
-      <div style={{ marginTop: '40px', padding: '20px', background: '#e8f4fd', borderRadius: '8px', fontSize: '14px' }}>
+      <div style={{ marginTop: '40px', padding: '20px', background: '#e8f4fd', borderRadius: '8px', fontSize: '14px', color: '#333' }}>
         <strong>Important:</strong> When validating a report, you must write a personal 2-4 sentence comment about the learner's progress. This comment appears permanently on their credential and cannot be auto-generated.
       </div>
     </div>
