@@ -1,12 +1,16 @@
 'use client';
 // Test page for credential system
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CredentialTest() {
   const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    loadProfiles();
+  }, []);
 
   const loadProfiles = async () => {
     setLoading(true);
