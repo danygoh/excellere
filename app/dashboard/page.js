@@ -144,16 +144,6 @@ export default function LearnerDashboard() {
           </div>
         </div>
 
-        {/* Navigation */}
-        <div style={{ marginTop: '40px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
-          <Link href="/test-credentials" style={{ color: '#666', textDecoration: 'none', fontSize: '12px' }}>
-            My Credentials →
-          </Link>
-          <Link href="/validate" style={{ color: '#666', textDecoration: 'none', fontSize: '12px' }}>
-            Validator Dashboard
-          </Link>
-        </div>
-
       </div>
     </div>
   );

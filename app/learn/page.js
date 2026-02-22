@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { Suspense, useState, useEffect, use } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -234,7 +234,7 @@ const styles = {
   }
 }
 
-export default function Learn() {
+function LearnContent() {
   const [phase, setPhase] = useState(PHASES.SELECT)
   const [teachResponse, setTeachResponse] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -248,17 +248,18 @@ export default function Learn() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Check for module param in URL
+  // Check for module param in URL - only after modules loaded
   useEffect(() => {
+    if (modules.length === 0) return
     const moduleParam = searchParams?.get('module')
     if (moduleParam !== null) {
       const index = parseInt(moduleParam)
-      if (!isNaN(index)) {
+      if (!isNaN(index) && index < modules.length) {
         setCurrentModuleIndex(index)
         setPhase(PHASES.UNDERSTAND)
       }
     }
-  }, [searchParams])
+  }, [searchParams, modules])
 
   // Fetch modules from API
   useEffect(() => {
@@ -599,5 +600,22 @@ export default function Learn() {
         </>
       )}
     </div>
+  )
+}
+
+
+function LearnLoading() {
+  return (
+    <div style={{ background: '#000', minHeight: '100vh', padding: '40px', color: '#666', textAlign: 'center' }}>
+      Loading...
+    </div>
+  )
+}
+
+export default function LearnPage() {
+  return (
+    <Suspense fallback={<LearnLoading />}>
+      <LearnContent />
+    </Suspense>
   )
 }
