@@ -148,3 +148,19 @@ export default function LearnerDashboard() {
     </div>
   );
 }
+
+
+        {/* Logout */}
+        <div style={{ marginTop: "40px", textAlign: "center" }}>
+          <button 
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              localStorage.removeItem("user");
+              window.location.href = "/login";
+            }}
+            style={{ background: "transparent", border: "1px solid #333", color: "#666", padding: "10px 20px", fontSize: "11px", cursor: "pointer" }}
+          >
+            SIGN OUT
+          </button>
+        </div>
+
