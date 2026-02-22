@@ -68,7 +68,7 @@ export default function ValidatorReviewPage({ params }) {
     return (
       <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <a href="/validate" style={{ display: 'inline-block', color: '#666', textDecoration: 'none', fontSize: '12px', marginBottom: '30px' }}>← BACK TO QUEUE</a>
+          <a href="/validate" style={{ display: 'inline-block', color: '#666', textDecoration: 'none', fontSize: '11px', marginBottom: '30px' }}>← BACK TO QUEUE</a>
           <p style={{ color: '#666' }}>Report not found</p>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function ValidatorReviewPage({ params }) {
   return (
     <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        <a href={`/validate?validator=${validatorId}`} style={{ display: 'inline-block', color: '#666', textDecoration: 'none', fontSize: '12px', marginBottom: '30px' }}>← BACK TO QUEUE</a>
+        <a href={`/validate?validator=${validatorId}`} style={{ display: 'inline-block', color: '#666', textDecoration: 'none', fontSize: '11px', marginBottom: '30px' }}>← BACK TO QUEUE</a>
         
         <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', color: '#fff', marginBottom: '40px' }}>Review: {report.student_name}</h1>
 
@@ -87,10 +87,10 @@ export default function ValidatorReviewPage({ params }) {
           <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px' }}>
             <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', marginBottom: '20px' }}>LEARNER CONTEXT</p>
             <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#fff', marginBottom: '8px' }}>{report.student_name}</h3>
-            <p style={{ color: '#d4af37', fontSize: '12px', marginBottom: '4px' }}>{report.student_job_title}, {report.student_organisation}</p>
-            <p style={{ color: '#444', fontSize: '12px', marginBottom: '16px' }}>{report.student_email}</p>
+            <p style={{ color: '#d4af37', fontSize: '11px', marginBottom: '4px' }}>{report.student_job_title}, {report.student_organisation}</p>
+            <p style={{ color: '#444', fontSize: '11px', marginBottom: '16px' }}>{report.student_email}</p>
             <span style={{ background: '#1a1a1a', color: '#888', padding: '4px 12px', fontSize: '11px' }}>{report.module_id?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Module'}</span>
-            <div style={{ marginTop: '20px', fontSize: '12px', color: '#444' }}>
+            <div style={{ marginTop: '20px', fontSize: '11px', color: '#444' }}>
               <strong style={{ color: '#666' }}>Module:</strong> {report.module_id?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}<br/>
               <strong style={{ color: '#666' }}>Submitted:</strong> {report.created_at ? new Date(report.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
             </div>
@@ -99,7 +99,7 @@ export default function ValidatorReviewPage({ params }) {
           {/* Center - Report */}
           <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px' }}>
             <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', marginBottom: '20px' }}>ARIA'S ASSESSMENT</p>
-            <p style={{ color: '#d4af37', fontSize: '24px', marginBottom: '20px' }}>{report.overall_score || 0}<span style={{ fontSize: '12px', color: '#444' }}>/100</span></p>
+            <p style={{ color: '#d4af37', fontSize: '24px', marginBottom: '20px' }}>{report.overall_score || 0}<span style={{ fontSize: '11px', color: '#444' }}>/100</span></p>
             <p style={{ color: '#666', fontSize: '10px', letterSpacing: '3px', marginBottom: '8px' }}>WHAT ARIA NOTICED</p>
             <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '14px', color: '#fff', fontStyle: 'italic', lineHeight: 1.7 }}>
               {report.ai_generated_summary || 'No assessment available yet.'}
@@ -120,38 +120,38 @@ export default function ValidatorReviewPage({ params }) {
               />
               
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'validated' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'validated' ? '#d4af37' : '#888', fontSize: '11px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="validated" 
                     checked={status === 'validated'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
+                    style={{ accentColor: '#d4af37', width: '10px', height: '10px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'validated' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>Validated — accurate assessment</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'needs_revision' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'needs_revision' ? '#d4af37' : '#888', fontSize: '11px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="needs_revision" 
                     checked={status === 'needs_revision'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
+                    style={{ accentColor: '#d4af37', width: '10px', height: '10px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'needs_revision' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>Needs Revision</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'exceptional' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '20px', fontWeight: 400 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'exceptional' ? '#d4af37' : '#888', fontSize: '11px', cursor: 'pointer', marginBottom: '20px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="exceptional" 
                     checked={status === 'exceptional'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
+                    style={{ accentColor: '#d4af37', width: '10px', height: '10px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'exceptional' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>★ Exceptional</span>
@@ -161,7 +161,7 @@ export default function ValidatorReviewPage({ params }) {
               <button 
                 type="submit" 
                 disabled={submitting}
-                style={{ width: '100%', background: '#d4af37', color: '#000', border: 'none', padding: '14px', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer', opacity: submitting ? 0.5 : 1 }}
+                style={{ width: '100%', background: '#d4af37', color: '#000', border: 'none', padding: '14px', fontSize: '11px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer', opacity: submitting ? 0.5 : 1 }}
               >
                 {submitting ? 'SUBMITTING...' : 'SIGN & ISSUE'}
               </button>
