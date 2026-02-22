@@ -95,6 +95,7 @@ export default function QuestionsPage() {
         data: {
           question_text: data.questionText,
           dimension: data.dimension,
+          question_number: questions.filter(q => q.dimension === data.dimension).length + 1,
           order_index: questions.length + 1,
           options: data.options
         }
