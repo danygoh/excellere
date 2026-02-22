@@ -60,14 +60,68 @@ export default function QuestionsPage() {
     setShowModal(true)
   }
 
-  const handleDelete = (question) => {
+  const handleDelete = async (question) => {
     if (confirm(`Delete this question?\n\n"${question.question_text?.substring(0, 100)}..."`)) {
-      showToast('Question deleted (soft delete)')
+      try {
+        const res = await fetch('/api/admin/questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', id: question.id })
+        })
+        
+        if (res.ok) {
+          showToast('Question deleted!')
+          // Refresh questions
+          const res = await fetch('/api/admin/questions')
+          if (res.ok) {
+            const data = await res.json()
+            setQuestions(data)
+          }
+        } else {
+          showToast('Failed to delete', 'error')
+        }
+      } catch (err) {
+        console.error('Delete error:', err)
+        showToast('Failed to delete', 'error')
+      }
     }
   }
 
-  const handleSave = (data) => {
-    showToast(editingQuestion ? 'Question updated!' : 'Question added!')
+  const handleSave = async (data) => {
+    try {
+      const payload = {
+        action: editingQuestion ? 'update' : 'create',
+        id: editingQuestion?.id,
+        data: {
+          question_text: data.questionText,
+          dimension: data.dimension,
+          order_index: questions.length + 1,
+          options: data.options
+        }
+      }
+      
+      const res = await fetch('/api/admin/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      
+      if (res.ok) {
+        showToast(editingQuestion ? 'Question updated!' : 'Question added!')
+        // Refresh questions
+        const res = await fetch('/api/admin/questions')
+        if (res.ok) {
+          const data = await res.json()
+          setQuestions(data)
+        }
+      } else {
+        showToast('Failed to save', 'error')
+      }
+    } catch (err) {
+      console.error('Save error:', err)
+      showToast('Failed to save', 'error')
+    }
+    
     setShowModal(false)
     setEditingQuestion(null)
   }
