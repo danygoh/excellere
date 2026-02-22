@@ -26,6 +26,9 @@ const MOCK_CONCEPTS = [
 export default function ConceptsPage() {
   const [concepts, setConcepts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [editingConcept, setEditingConcept] = useState(null)
+  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     async function loadConcepts() {
@@ -50,9 +53,47 @@ export default function ConceptsPage() {
     loadConcepts()
   }, [])
 
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  const handleEdit = (concept) => {
+    setEditingConcept(concept)
+    setShowModal(true)
+  }
+
+  const handleSave = async (data) => {
+    try {
+      const res = await fetch('/api/admin/concepts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', id: editingConcept.id, data })
+      })
+      
+      if (res.ok) {
+        showToast('Concept updated!')
+        // Refresh concepts
+        const res = await fetch('/api/admin/concepts')
+        if (res.ok) {
+          const data = await res.json()
+          setConcepts(data)
+        }
+      } else {
+        showToast('Failed to update', 'error')
+      }
+    } catch (err) {
+      console.error('Save error:', err)
+      showToast('Failed to update', 'error')
+    }
+    
+    setShowModal(false)
+    setEditingConcept(null)
+  }
+
   const conceptsByModule = MODULES.map(mod => ({
     ...mod,
-    concepts: concepts.filter(c => c.module_id === mod.id).sort((a, b) => a.order_index - b.order_index)
+    concepts: concepts.filter(c => c.module_id === mod.id).sort((a, b) => (a.order_index || 0) - (b.order_index || 0))
   }))
 
   if (loading) return <div className="admin-main"><div className="empty-state">Loading...</div></div>
@@ -77,12 +118,94 @@ export default function ConceptsPage() {
                   </div>
                   <span className={`badge ${concept.is_active ? 'badge-green' : 'badge-gray'}`}>{concept.is_active ? 'Active' : 'Inactive'}</span>
                 </div>
-                <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}><button className="btn btn-secondary btn-sm" style={{ flex: 1 }}>Edit in Content Editor</button></div>
+                <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
+                  <button className="btn btn-secondary btn-sm" style={{ flex: 1 }} onClick={() => handleEdit(concept)}>Edit in Content Editor</button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       ))}
+
+      {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
+
+      {showModal && (
+        <ConceptModal concept={editingConcept} onClose={() => { setShowModal(false); setEditingConcept(null) }} onSave={handleSave} />
+      )}
+    </div>
+  )
+}
+
+function ConceptModal({ concept, onClose, onSave }) {
+  const [formData, setFormData] = useState({
+    name: concept?.name || '',
+    summary: concept?.summary || '',
+    module_id: concept?.module_id || 'ai-native-business-design',
+    is_active: concept?.is_active !== false
+  })
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    onSave(formData)
+  }
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+        <div className="modal-header">
+          <h2 className="modal-title">Edit Concept</h2>
+          <button className="modal-close" onClick={onClose}>×</button>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-group">
+              <label className="form-label">Concept Name</label>
+              <input 
+                type="text" 
+                className="form-input"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Summary</label>
+              <textarea 
+                className="form-input form-textarea"
+                value={formData.summary}
+                onChange={e => setFormData({...formData, summary: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Module</label>
+              <select 
+                className="form-select"
+                value={formData.module_id}
+                onChange={e => setFormData({...formData, module_id: e.target.value})}
+              >
+                {MODULES.map(m => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                <input 
+                  type="checkbox"
+                  checked={formData.is_active}
+                  onChange={e => setFormData({...formData, is_active: e.target.checked})}
+                />
+                <span>Active</span>
+              </label>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+            <button type="submit" className="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
