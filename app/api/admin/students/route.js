@@ -103,14 +103,27 @@ export async function POST(request) {
     const { data: reports } = await supabase.from('insight_reports').select('id').eq('user_id', studentId)
     
     if (reports && reports.length > 0) {
-      // Update insight_reports with validator
-      await supabase.from('insight_reports').update({ validator_id: validatorId }).eq('user_id', studentId)
+      // Only update validation_queue (not insight_reports due to FK constraint)
+      // Check if there's an existing queue entry
+      const { data: existingQueue } = await supabase.from('validation_queue')
+        .select('id')
+        .eq('report_id', reports[0].id)
+        .maybeSingle()
       
-      // Also update validation_queue if exists
-      await supabase.from('validation_queue').update({ 
-        validator_id: validatorId, 
-        status: 'in_progress' 
-      }).eq('report_id', reports[0].id)
+      if (existingQueue) {
+        // Update existing queue entry
+        await supabase.from('validation_queue').update({ 
+          validator_id: validatorId, 
+          status: 'in_progress' 
+        }).eq('report_id', reports[0].id)
+      } else {
+        // Create new queue entry
+        await supabase.from('validation_queue').insert({
+          report_id: reports[0].id,
+          validator_id: validatorId,
+          status: 'in_progress'
+        })
+      }
     }
     
     return NextResponse.json({ success: true })

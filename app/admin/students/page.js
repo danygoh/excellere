@@ -3,19 +3,19 @@
 import { useState, useEffect } from 'react'
 
 const MOCK_STUDENTS = [
-  { id: '1', first_name: 'Sarah', last_name: 'Chen', email: 'sarah.chen@example.com', job_title: 'CEO', sector: 'Financial Services', organisation: 'TechCorp Ltd', onboarding_complete: true, validator_name: 'Prof. Mark Esposito', sessions_completed: 8, sessions_total: 12, readiness_score: 72, stage: 'AI Fluent', last_active: new Date().toISOString() },
-  { id: '2', first_name: 'James', last_name: 'Wilson', email: 'james.wilson@example.com', job_title: 'COO', sector: 'Healthcare', organisation: 'HealthPlus', onboarding_complete: true, validator_name: 'Prof. Terence Tse', sessions_completed: 12, sessions_total: 12, readiness_score: 85, stage: 'AI Native', last_active: new Date(Date.now() - 86400000).toISOString() },
-  { id: '3', first_name: 'Emma', last_name: 'Davis', email: 'emma.davis@example.com', job_title: 'Director of AI', sector: 'Professional Services', organisation: 'Consulting Co', onboarding_complete: true, validator_name: null, sessions_completed: 4, sessions_total: 12, readiness_score: 58, stage: 'AI Informed', last_active: new Date(Date.now() - 86400000 * 5).toISOString() }
+  { id: '1', first_name: 'Sarah', last_name: 'Chen', email: 'sarah.chen@example.com', job_title: 'CEO', sector: 'Financial Services', organisation: 'TechCorp Ltd', sessions_completed: 12, sessions_total: 12, readiness_score: 72, stage: 'AI Native', validator_name: 'Prof. Mark Esposito', last_active: new Date().toISOString() },
+  { id: '2', first_name: 'James', last_name: 'Wilson', email: 'james.wilson@example.com', job_title: 'COO', sector: 'Healthcare', organisation: 'HealthPlus', sessions_completed: 8, sessions_total: 12, readiness_score: 65, stage: 'AI Fluent', validator_name: null, last_active: new Date(Date.now() - 86400000).toISOString() },
 ]
 
 const MOCK_VALIDATORS = [
-  { id: 'mark', name: 'Prof. Mark Esposito' },
-  { id: 'terence', name: 'Prof. Terence Tse' },
-  { id: 'danny', name: 'Danny Goh' }
+  { id: 'v1', name: 'Prof. Mark Esposito' },
+  { id: 'v2', name: 'Prof. Terence Tse' },
+  { id: 'v3', name: 'Danny Goh' }
 ]
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([])
+  const [validators, setValidators] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState({ stage: '', sector: '', status: '' })
@@ -23,7 +23,6 @@ export default function StudentsPage() {
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
   const [toast, setToast] = useState(null)
-  const [validators] = useState(MOCK_VALIDATORS)
 
   // Fetch students function
   const fetchStudents = async () => {
@@ -33,6 +32,7 @@ export default function StudentsPage() {
         const data = await res.json()
         if (data && data.length > 0) {
           setStudents(data)
+          setLoading(false)
           return
         }
       }
@@ -45,8 +45,27 @@ export default function StudentsPage() {
     }
   }
 
+  // Fetch validators function
+  const fetchValidators = async () => {
+    try {
+      const res = await fetch('/api/admin/validators')
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.validators) {
+          setValidators(data.validators)
+          return
+        }
+      }
+      setValidators(MOCK_VALIDATORS)
+    } catch (err) {
+      console.error('Failed to fetch validators:', err)
+      setValidators(MOCK_VALIDATORS)
+    }
+  }
+
   useEffect(() => {
     fetchStudents()
+    fetchValidators()
   }, [])
 
   const showToast = (message, type = 'success') => {
@@ -108,7 +127,6 @@ export default function StudentsPage() {
       
       if (res.ok) {
         showToast('Validator assigned successfully!')
-        // Refresh the students list
         await fetchStudents()
       } else {
         showToast('Failed to assign validator', 'error')
@@ -125,7 +143,6 @@ export default function StudentsPage() {
   const handleAddStudent = async (data) => {
     showToast('Student added successfully! Invitation sent.')
     setShowAddModal(false)
-    // Refresh the list
     await fetchStudents()
   }
 
@@ -144,7 +161,7 @@ export default function StudentsPage() {
           <p className="page-subtitle">Manage learner accounts and track progress</p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button className="btn btn-secondary" onClick={fetchStudents}>↻ Refresh</button>
+          <button className="btn btn-secondary" onClick={() => { fetchStudents(); fetchValidators() }}>↻ Refresh</button>
           <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>+ Add Student</button>
         </div>
       </div>
