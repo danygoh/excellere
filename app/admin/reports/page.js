@@ -1,13 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
-const MOCK_REPORTS = [
-  { id: '1', student: 'Sarah Chen', type: 'Assessment Report', module: 'AI-Native Business Design', status: 'validated', validator: 'Prof. Mark Esposito', date: '2026-02-20' },
-  { id: '2', student: 'James Wilson', type: 'Programme Report', module: 'Double Loop Strategy', status: 'validated', validator: 'Prof. Terence Tse', date: '2026-02-18' },
-  { id: '3', student: 'Emma Davis', type: 'Assessment Report', module: 'Agentic AI', status: 'pending', validator: null, date: '2026-02-21' },
-  { id: '4', student: 'Michael Brown', type: 'Programme Report', module: 'AI-Native Business Design', status: 'pending', validator: 'Danny Goh', date: '2026-02-19' }
-]
+import { useRouter } from 'next/navigation'
 
 export default function ReportsPage() {
   const [reports, setReports] = useState([])
@@ -25,10 +19,8 @@ export default function ReportsPage() {
             return
           }
         }
-        setReports(MOCK_REPORTS)
       } catch (err) {
         console.error('Failed to fetch reports:', err)
-        setReports(MOCK_REPORTS)
       } finally {
         setLoading(false)
       }
@@ -36,7 +28,15 @@ export default function ReportsPage() {
     fetchData()
   }, [])
 
-  const getStatusBadge = (status) => status === 'validated' ? <span className="badge badge-green">Validated</span> : <span className="badge badge-amber">Pending</span>
+  const getStatusBadge = (status) => {
+    if (status === 'validated') return <span className="badge badge-green">Validated</span>
+    if (status === 'in_progress') return <span className="badge badge-amber">In Progress</span>
+    return <span className="badge badge-gray">Pending</span>
+  }
+
+  const handleView = (reportId) => {
+    window.location.href = `/validate/${reportId}`
+  }
 
   if (loading) return <div className="admin-main"><div className="empty-state">Loading...</div></div>
 
@@ -44,6 +44,7 @@ export default function ReportsPage() {
     <div>
       <div className="page-header">
         <div><h1 className="page-title">Reports</h1><p className="page-subtitle">All generated assessment and programme reports</p></div>
+        <button className="btn btn-secondary" onClick={() => window.location.reload()}>↻ Refresh</button>
       </div>
 
       <div className="stats-grid">
@@ -54,17 +55,29 @@ export default function ReportsPage() {
       </div>
 
       <table className="data-table">
-        <thead><tr><th>Student</th><th>Report Type</th><th>Module</th><th>Status</th><th>Validator</th><th>Date</th><th>Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Report Type</th>
+            <th>Module</th>
+            <th>Status</th>
+            <th>Validator</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
         <tbody>
           {reports.map(report => (
             <tr key={report.id}>
-              <td style={{ fontWeight: 600 }}>{report.student}</td>
-              <td>{report.type}</td>
-              <td>{report.module}</td>
+              <td style={{ fontWeight: 600 }}>{report.first_name} {report.last_name}</td>
+              <td>{report.report_type || 'Assessment Report'}</td>
+              <td>{report.module_id?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '-'}</td>
               <td>{getStatusBadge(report.status)}</td>
-              <td>{report.validator || '-'}</td>
-              <td>{report.date}</td>
-              <td><button className="btn btn-secondary btn-sm">View</button></td>
+              <td>{report.validator_name || '-'}</td>
+              <td>{report.created_at ? new Date(report.created_at).toLocaleDateString() : '-'}</td>
+              <td>
+                <button className="btn btn-secondary btn-sm" onClick={() => handleView(report.id)}>View</button>
+              </td>
             </tr>
           ))}
         </tbody>
