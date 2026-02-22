@@ -2,7 +2,7 @@
 // Part of the Learning Loop - Analyse phase
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
-import { conceptLibrary } from '@/lib/learning/conceptLibrary';
+import db from '@/lib/database';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
@@ -19,22 +19,18 @@ export async function POST(request) {
       difficulty = 'medium'
     } = await request.json();
     
-    if (!conceptId || !teachResponse || !userProfile) {
+    if (!conceptId || !teachResponse) {
       return NextResponse.json({
-        error: 'Missing required fields: conceptId, teachResponse, userProfile'
+        error: 'Missing required fields: conceptId, teachResponse'
       }, { status: 400 });
     }
     
-    // Find concept in library
-    const concept = conceptLibrary.find(c => c.id === conceptId);
+    // Fetch concept from database
+    const concept = await db.getConcept(conceptId, userProfile?.sector);
     
     if (!concept) {
       return NextResponse.json({ error: 'Concept not found' }, { status: 404 });
     }
-    
-    // Get question based on difficulty
-    const questions = concept[`questions_${difficulty}`] || concept.questions_medium;
-    const question = questions?.[0];
 
     const systemPrompt = `You are Aria, Excellere's AI learning coach. You analyse how senior business leaders explain complex concepts and give them precise, personalised feedback.
 
@@ -51,11 +47,8 @@ Return valid JSON only.`;
 
     const userPrompt = `
 Learner:
-- Name: ${userProfile.firstName || 'Learner'}
-- Role: ${userProfile.role || 'professional'} at a ${userProfile.sector || 'organisation'}
-- Archetype: ${userProfile.archetype || 'Learner'}
-- Technical depth: ${userProfile.dimensions?.conceptual_vs_technical || 50}/100
-- Double-loop tendency: ${userProfile.dimensions?.single_vs_double_loop || 50}/100
+- Name: ${userProfile?.first_name || userProfile?.firstName || 'Learner'}
+- Role: ${userProfile?.job_title || userProfile?.role || 'professional'} at a ${userProfile?.sector || 'organisation'}
 
 Concept: "${concept.name}"
 Full concept text: ${concept.body_text}
@@ -74,22 +67,16 @@ Analyse and return:
   "overall_strength": <0-100>,
   "feedback": {
     "what_you_got_right": "2-3 sentences. Quote their specific words. Genuine, not flattering.",
-    "the_gap": "2-3 sentences. Name the missing element clearly. Explain why a ${userProfile.role || 'professional'} needs it.",
-    "tailored_insight": "2-3 sentences. Apply the gap to their ${userProfile.sector || 'business'} context with a concrete example."
+    "the_gap": "2-3 sentences. Name the missing element clearly.",
+    "tailored_insight": "2-3 sentences. Apply the gap to their context."
   },
   "primary_gap": {
     "name": "short label e.g. 'compounding mechanism'",
     "what_was_missing": "specific description",
-    "why_it_matters": "why this matters for their role/sector"
+    "why_it_matters": "why this matters"
   },
   "next_difficulty": "easy|medium|hard|very_hard",
-  "next_question_focus": "what the deeper question should probe",
-  "knowledge_node_update": {
-    "status": "taught|gap|mastered",
-    "strength": <0-100>,
-    "gap_flags": ["specific gap labels"]
-  },
-  "badges_earned": ["badge_type if earned, empty array if none"]
+  "badges_earned": []
 }`;
 
     const response = await anthropic.messages.create({
@@ -116,24 +103,13 @@ Analyse and return:
           tailored_insight: 'Keep going'
         },
         primary_gap: { name: 'learning', what_was_missing: '', why_it_matters: '' },
-        next_difficulty: 'medium',
-        knowledge_node_update: { status: 'taught', strength: 50, gap_flags: [] },
         badges_earned: []
       };
     }
 
-    // Determine next phase
-    let nextPhase = 'feedback';
-    if (analysis.overall_strength >= 85) {
-      nextPhase = 'deeper';
-    }
-    
-    // Check for badge criteria
+    // Check for badges
     if (analysis.scores?.applied_to_own_context >= 75) {
-      analysis.badges_earned = [...analysis.badges_earned, 'context_applier'];
-    }
-    if (analysis.primary_gap?.name?.includes('frame') || analysis.primary_gap?.name?.includes('loop')) {
-      analysis.badges_earned = [...analysis.badges_earned, 'strategic_reframer'];
+      analysis.badges_earned = [...(analysis.badges_earned || []), 'context_applier'];
     }
 
     return NextResponse.json({
@@ -145,9 +121,7 @@ Analyse and return:
         analysed_at: new Date().toISOString()
       },
       next: {
-        phase: nextPhase,
-        question: question,
-        recommendation: analysis.next_question_focus
+        phase: analysis.overall_strength >= 85 ? 'deeper' : 'feedback'
       }
     });
 
