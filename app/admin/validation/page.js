@@ -5,44 +5,64 @@ import { useState, useEffect } from 'react'
 const MOCK_QUEUE = [
   { id: '1', first_name: 'Sarah', last_name: 'Chen', job_title: 'CEO', organisation: 'TechCorp Ltd', module_id: 'ai-native-business-design', report_type: 'Assessment Report', days_waiting: 3, validator_name: 'Prof. Mark Esposito', status: 'pending' },
   { id: '2', first_name: 'James', last_name: 'Wilson', job_title: 'COO', organisation: 'HealthPlus', module_id: 'double-loop-strategy', report_type: 'Programme Report', days_waiting: 6, validator_name: null, status: 'pending' },
-  { id: '3', first_name: 'Emma', last_name: 'Davis', job_title: 'Director of AI', organisation: 'Consulting Co', module_id: 'agentic-ai', report_type: 'Assessment Report', days_waiting: 1, validator_name: 'Prof. Terence Tse', status: 'pending' }
 ]
 
 const MOCK_VALIDATORS = [
-  { id: 'mark', name: 'Prof. Mark Esposito' },
-  { id: 'terence', name: 'Prof. Terence Tse' },
-  { id: 'danny', name: 'Danny Goh' }
+  { id: 'v1', name: 'Prof. Mark Esposito' },
+  { id: 'v2', name: 'Prof. Terence Tse' },
+  { id: 'v3', name: 'Danny Goh' }
 ]
 
 export default function ValidationQueuePage() {
   const [queue, setQueue] = useState([])
+  const [validators, setValidators] = useState([])
   const [loading, setLoading] = useState(true)
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
   const [toast, setToast] = useState(null)
-  const [validators] = useState(MOCK_VALIDATORS)
+
+  // Fetch queue
+  const fetchQueue = async () => {
+    try {
+      const res = await fetch('/api/admin/validation')
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.length > 0) {
+          setQueue(data)
+          setLoading(false)
+          return
+        }
+      }
+      setQueue(MOCK_QUEUE)
+    } catch (err) {
+      console.error('Failed to fetch queue:', err)
+      setQueue(MOCK_QUEUE)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch validators
+  const fetchValidators = async () => {
+    try {
+      const res = await fetch('/api/admin/validators')
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.validators) {
+          setValidators(data.validators)
+          return
+        }
+      }
+      setValidators(MOCK_VALIDATORS)
+    } catch (err) {
+      console.error('Failed to fetch validators:', err)
+      setValidators(MOCK_VALIDATORS)
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/admin/validation')
-        if (res.ok) {
-          const data = await res.json()
-          if (data && data.length > 0) {
-            setQueue(data)
-            setLoading(false)
-            return
-          }
-        }
-        setQueue(MOCK_QUEUE)
-      } catch (err) {
-        console.error('Failed to fetch queue:', err)
-        setQueue(MOCK_QUEUE)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
+    fetchQueue()
+    fetchValidators()
   }, [])
 
   const getUrgency = (days) => {
@@ -63,8 +83,27 @@ export default function ValidationQueuePage() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  const handleAssign = (validatorId) => {
-    showToast('Validator assigned!')
+  const handleAssign = async (validatorId) => {
+    if (!selectedItem?.id) return
+    
+    try {
+      const res = await fetch('/api/admin/validation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId: selectedItem.id, validatorId })
+      })
+      
+      if (res.ok) {
+        showToast('Validator assigned!')
+        await fetchQueue()
+      } else {
+        showToast('Failed to assign', 'error')
+      }
+    } catch (err) {
+      console.error('Failed to assign:', err)
+      showToast('Failed to assign', 'error')
+    }
+    
     setShowAssignModal(false)
     setSelectedItem(null)
   }
@@ -75,6 +114,7 @@ export default function ValidationQueuePage() {
     <div>
       <div className="page-header">
         <div><h1 className="page-title">Validation Queue</h1><p className="page-subtitle">Pending reports awaiting validator review</p></div>
+        <button className="btn btn-secondary" onClick={() => { fetchQueue(); fetchValidators() }}>↻ Refresh</button>
       </div>
 
       <div className="stats-grid">

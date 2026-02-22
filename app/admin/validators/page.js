@@ -2,17 +2,8 @@
 
 import { useState, useEffect } from 'react'
 
-const MOCK_VALIDATORS = [
-  { id: 'mark', name: 'Prof. Mark Esposito', title: 'Professor of Business & Economics', institution: 'Harvard / Hult', pending: 3, completed: 12 },
-  { id: 'terence', name: 'Prof. Terence Tse', title: 'Professor of Finance & AI Transformation', institution: 'ESCP Business School', pending: 2, completed: 8 },
-  { id: 'danny', name: 'Danny Goh', title: 'AI Strategy Practitioner', institution: 'Excellere', pending: 1, completed: 15 }
-]
-
 const MOCK_QUEUE = [
   { id: '1', student: 'Sarah Chen', module: 'AI-Native Business Design', validator: 'Prof. Mark Esposito', days: 3 },
-  { id: '2', student: 'James Wilson', module: 'Double Loop Strategy', validator: 'Prof. Terence Tse', days: 6 },
-  { id: '3', student: 'Emma Davis', module: 'Agentic AI', validator: 'Danny Goh', days: 1 },
-  { id: '4', student: 'Michael Brown', module: 'AI-Native Business Design', validator: null, days: 4 }
 ]
 
 export default function ValidatorsPage() {
@@ -21,33 +12,47 @@ export default function ValidatorsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/admin/validators')
-        if (res.ok) {
-          const data = await res.json()
-          if (data && data.validators && data.validators.length > 0) {
-            setValidators(data.validators)
-            setQueue(data.queue || [])
-            setLoading(false)
-            return
-          }
+  // Fetch validators
+  const fetchValidators = async () => {
+    try {
+      const res = await fetch('/api/admin/validators')
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.validators) {
+          setValidators(data.validators)
+          setQueue(data.queue || [])
+          setLoading(false)
+          return
         }
-        setValidators(MOCK_VALIDATORS)
-        setQueue(MOCK_QUEUE)
-      } catch (err) {
-        console.error('Failed to fetch data:', err)
-        setValidators(MOCK_VALIDATORS)
-        setQueue(MOCK_QUEUE)
-      } finally {
-        setLoading(false)
       }
+      setQueue([])
+    } catch (err) {
+      console.error('Failed to fetch data:', err)
+    } finally {
+      setLoading(false)
     }
-    fetchData()
+  }
+
+  // Fetch validation queue
+  const fetchQueue = async () => {
+    try {
+      const res = await fetch('/api/admin/validation')
+      if (res.ok) {
+        const data = await res.json()
+        setQueue(data || [])
+      }
+    } catch (err) {
+      console.error('Failed to fetch queue:', err)
+    }
+  }
+
+  useEffect(() => {
+    fetchValidators()
   }, [])
 
-  const filteredQueue = filter === 'all' ? queue : queue.filter(q => q.validator === filter || (filter === 'unassigned' && !q.validator))
+  const filteredQueue = filter === 'all' 
+    ? queue 
+    : queue.filter(q => q.validator_name === filter || (filter === 'unassigned' && !q.validator_name))
 
   if (loading) return <div className="admin-main"><div className="empty-state">Loading...</div></div>
 
@@ -55,6 +60,7 @@ export default function ValidatorsPage() {
     <div>
       <div className="page-header">
         <div><h1 className="page-title">Validators</h1><p className="page-subtitle">Manage validators and their workload</p></div>
+        <button className="btn btn-secondary" onClick={fetchValidators}>↻ Refresh</button>
       </div>
 
       <div className="stats-grid">
@@ -87,10 +93,10 @@ export default function ValidatorsPage() {
           <tbody>
             {filteredQueue.map(item => (
               <tr key={item.id}>
-                <td style={{ fontWeight: 600 }}>{item.student}</td>
-                <td>{item.module}</td>
-                <td>{item.validator || 'Unassigned'}</td>
-                <td>{item.days} days</td>
+                <td style={{ fontWeight: 600 }}>{item.first_name} {item.last_name}</td>
+                <td>{item.module_id?.replace(/-/g, ' ') || item.module}</td>
+                <td>{item.validator_name || 'Unassigned'}</td>
+                <td>{item.days_waiting || 0} days</td>
                 <td><button className="btn btn-secondary btn-sm">Reassign</button></td>
               </tr>
             ))}
