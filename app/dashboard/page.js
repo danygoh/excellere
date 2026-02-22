@@ -158,7 +158,7 @@ export default function LearnerDashboard() {
               localStorage.removeItem("user");
               window.location.href = "/login";
             }}
-            style={{ background: "transparent", border: "1px solid #333", color: "#666", padding: "10px 20px", fontSize: "11px", cursor: "pointer" }}
+            style={{ background: "transparent", border: "1px solid #d4af37", color: "#d4af37", padding: "10px 20px", fontSize: "11px", cursor: "pointer" }}
           >
             SIGN OUT
           </button>
