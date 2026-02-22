@@ -80,9 +80,11 @@ export default function LearnerDashboard() {
           </p>
           
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button style={{ background: '#d4af37', color: '#000', border: 'none', padding: '12px 24px', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer' }}>
-              CONTINUE LEARNING →
-            </button>
+            <Link href="/learn">
+              <button style={{ background: '#d4af37', color: '#000', border: 'none', padding: '12px 24px', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', cursor: 'pointer' }}>
+                CONTINUE LEARNING →
+              </button>
+            </Link>
           </div>
         </div>
 
