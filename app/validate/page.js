@@ -6,15 +6,25 @@ const validators = [
   { id: 'danny', name: 'Danny Goh', title: 'Excellere', email: 'danny@excellere.ai' }
 ];
 
-const pendingReports = [
-  { id: 'r1', learner_name: 'Sarah Chen', role: 'COO, FinTech', module: 'AI-Native Business Design', submitted_at: '2026-02-20', report_summary: 'Strategic Reframer with strong double-loop thinking...' },
-  { id: 'r2', learner_name: 'Marcus Williams', role: 'VP Innovation, Healthcare', module: 'Agentic AI for Business', submitted_at: '2026-02-19', report_summary: 'Pragmatic implementer focusing on deployment timelines...' },
-  { id: 'r3', learner_name: 'Elena Rodriguez', role: 'Head of Digital, Banking', module: 'AI Strategy & Governance', submitted_at: '2026-02-18', report_summary: 'Catalyst leader finding competitive advantage in constraints...' }
-];
+import db from '@/lib/database';
 
 export default async function ValidatorDashboard({ searchParams }) {
   const validatorId = searchParams?.validator;
   const validator = validators.find(v => v.id === validatorId);
+
+  // Fetch reports from database
+  let reports = [];
+  if (validatorId) {
+    const allReports = await db.getInsightReports();
+    // Filter by validator_id if assigned, otherwise show unassigned
+    if (validatorId === 'danny') {
+      // Danny sees all reports
+      reports = allReports || [];
+    } else {
+      // Other validators see their assigned reports
+      reports = (allReports || []).filter(r => r.validator_id === validatorId || !r.validator_id);
+    }
+  }
 
   return (
     <div style={{ background: '#000', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Inter, sans-serif' }}>
@@ -52,43 +62,60 @@ export default async function ValidatorDashboard({ searchParams }) {
               </div>
               <div>
                 <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', color: '#fff' }}>{validator.name}</div>
-                <div style={{ color: '#666', fontSize: '12px' }}>{validator.title}</div>
-              </div>
-              <div style={{ marginLeft: 'auto', background: '#1a1a1a', color: '#d4af37', padding: '8px 16px', fontSize: '11px', letterSpacing: '1px' }}>
-                {pendingReports.length} PENDING
+                <div style={{ fontSize: '12px', color: '#666' }}>{validator.title}</div>
               </div>
             </div>
 
-            {/* Queue */}
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', marginBottom: '20px' }}>Reports Awaiting Validation</h2>
-            
-            <div style={{ display: 'grid', gap: '16px' }}>
-              {pendingReports.map(report => (
-                <div key={report.id} style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                    <div>
-                      <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff' }}>{report.learner_name}</div>
-                      <div style={{ color: '#666', fontSize: '12px' }}>{report.role}</div>
-                    </div>
-                    <span style={{ background: '#d4af37', color: '#000', padding: '4px 12px', fontSize: '10px', letterSpacing: '1px' }}>PENDING</span>
-                  </div>
-                  <div style={{ color: '#444', fontSize: '12px', marginBottom: '16px' }}>
-                    <strong style={{ color: '#666' }}>Module:</strong> {report.module}<br/>
-                    <strong style={{ color: '#666' }}>Submitted:</strong> {report.submitted_at}
-                  </div>
-                  <div style={{ background: '#1a1a1a', padding: '12px', fontSize: '13px', fontStyle: 'italic', color: '#666', marginBottom: '16px' }}>
-                    "{report.report_summary}"
-                  </div>
-                  <a href={`/validate/${report.id}`} style={{ display: 'inline-block', background: '#d4af37', color: '#000', padding: '12px 24px', textDecoration: 'none', fontSize: '11px', fontWeight: 600, letterSpacing: '1px' }}>
-                    REVIEW & VALIDATE →
-                  </a>
-                </div>
-              ))}
+            {/* Stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '40px' }}>
+              <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px', textAlign: 'center' }}>
+                <div style={{ fontSize: '36px', fontFamily: 'Playfair Display, serif', color: '#d4af37' }}>{reports.length}</div>
+                <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>Total Reports</div>
+              </div>
+              <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px', textAlign: 'center' }}>
+                <div style={{ fontSize: '36px', fontFamily: 'Playfair Display, serif', color: '#d4af37' }}>{reports.filter(r => r.status === 'pending').length}</div>
+                <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>Pending</div>
+              </div>
+              <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '30px', textAlign: 'center' }}>
+                <div style={{ fontSize: '36px', fontFamily: 'Playfair Display, serif', color: '#d4af37' }}>{reports.filter(r => r.status === 'validated').length}</div>
+                <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>Validated</div>
+              </div>
             </div>
+
+            {/* Reports List */}
+            <div style={{ marginBottom: '20px', fontSize: '14px', color: '#666' }}>Pending Reviews</div>
+            
+            {reports.length === 0 ? (
+              <div style={{ background: '#0a0a0a', border: '1px solid #222', padding: '60px', textAlign: 'center', color: '#666' }}>
+                No reports assigned to you yet.
+              </div>
+            ) : (
+              reports.map(report => (
+                <a key={report.id} href={`/validate/${report.id}?validator=${validatorId}`} style={{ display: 'block', background: '#0a0a0a', border: '1px solid #222', padding: '24px', marginBottom: '12px', textDecoration: 'none' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#fff', marginBottom: '8px' }}>
+                        {report.first_name} {report.last_name}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#666' }}>
+                        {report.role} • {report.sector}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '11px', color: '#d4af37', marginBottom: '4px' }}>
+                        {report.content?.type === 'assessment' ? 'Assessment Report' : 'Programme Report'}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#444' }}>
+                        {new Date(report.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))
+            )}
           </div>
         )}
-
       </div>
     </div>
-  );
+  )
 }
