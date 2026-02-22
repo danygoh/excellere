@@ -120,38 +120,38 @@ export default function ValidatorReviewPage({ params }) {
               />
               
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: status === 'validated' ? '#d4af37' : '#888', fontSize: '13px', cursor: 'pointer', marginBottom: '12px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'validated' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="validated" 
                     checked={status === 'validated'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '14px', height: '14px' }} 
+                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'validated' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>Validated — accurate assessment</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: status === 'needs_revision' ? '#d4af37' : '#888', fontSize: '13px', cursor: 'pointer', marginBottom: '12px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'needs_revision' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '10px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="needs_revision" 
                     checked={status === 'needs_revision'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '14px', height: '14px' }} 
+                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'needs_revision' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>Needs Revision</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: status === 'exceptional' ? '#d4af37' : '#888', fontSize: '13px', cursor: 'pointer', marginBottom: '20px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', color: status === 'exceptional' ? '#d4af37' : '#888', fontSize: '12px', cursor: 'pointer', marginBottom: '20px', fontWeight: 400 }}>
                   <input 
                     type="radio" 
                     name="status" 
                     value="exceptional" 
                     checked={status === 'exceptional'}
                     onChange={(e) => setStatus(e.target.value)}
-                    style={{ accentColor: '#d4af37', width: '14px', height: '14px' }} 
+                    style={{ accentColor: '#d4af37', width: '12px', height: '12px' }} 
                   />
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: status === 'exceptional' ? '#d4af37' : '#666', flexShrink: 0 }} />
                   <span>★ Exceptional</span>
