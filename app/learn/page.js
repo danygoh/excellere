@@ -248,6 +248,18 @@ export default function Learn() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  // Check for module param in URL
+  useEffect(() => {
+    const moduleParam = searchParams?.get('module')
+    if (moduleParam !== null) {
+      const index = parseInt(moduleParam)
+      if (!isNaN(index)) {
+        setCurrentModuleIndex(index)
+        setPhase(PHASES.UNDERSTAND)
+      }
+    }
+  }, [searchParams])
+
   // Fetch modules from API
   useEffect(() => {
     async function fetchModules() {
