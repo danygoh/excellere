@@ -25,28 +25,27 @@ export default function StudentsPage() {
   const [toast, setToast] = useState(null)
   const [validators] = useState(MOCK_VALIDATORS)
 
-  useEffect(() => {
-    async function fetchStudents() {
-      try {
-        // Try API first
-        const res = await fetch('/api/admin/students')
-        if (res.ok) {
-          const data = await res.json()
-          if (data && data.length > 0) {
-            setStudents(data)
-            setLoading(false)
-            return
-          }
+  // Fetch students function
+  const fetchStudents = async () => {
+    try {
+      const res = await fetch('/api/admin/students')
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.length > 0) {
+          setStudents(data)
+          return
         }
-        // Fallback to mock
-        setStudents(MOCK_STUDENTS)
-      } catch (err) {
-        console.error('Failed to fetch students:', err)
-        setStudents(MOCK_STUDENTS)
-      } finally {
-        setLoading(false)
       }
+      setStudents(MOCK_STUDENTS)
+    } catch (err) {
+      console.error('Failed to fetch students:', err)
+      setStudents(MOCK_STUDENTS)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchStudents()
   }, [])
 
@@ -98,7 +97,27 @@ export default function StudentsPage() {
   }
 
   const handleAssignValidator = async (validatorId) => {
-    showToast('Validator assigned successfully!')
+    if (!selectedStudent?.id) return
+    
+    try {
+      const res = await fetch('/api/admin/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: selectedStudent.id, validatorId })
+      })
+      
+      if (res.ok) {
+        showToast('Validator assigned successfully!')
+        // Refresh the students list
+        await fetchStudents()
+      } else {
+        showToast('Failed to assign validator', 'error')
+      }
+    } catch (err) {
+      console.error('Failed to assign:', err)
+      showToast('Failed to assign validator', 'error')
+    }
+    
     setShowAssignModal(false)
     setSelectedStudent(null)
   }
@@ -106,6 +125,8 @@ export default function StudentsPage() {
   const handleAddStudent = async (data) => {
     showToast('Student added successfully! Invitation sent.')
     setShowAddModal(false)
+    // Refresh the list
+    await fetchStudents()
   }
 
   if (loading) return <div className="admin-main"><div className="empty-state">Loading...</div></div>
@@ -122,7 +143,10 @@ export default function StudentsPage() {
           <h1 className="page-title">Students</h1>
           <p className="page-subtitle">Manage learner accounts and track progress</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>+ Add Student</button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button className="btn btn-secondary" onClick={fetchStudents}>↻ Refresh</button>
+          <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>+ Add Student</button>
+        </div>
       </div>
 
       <div className="stats-grid">

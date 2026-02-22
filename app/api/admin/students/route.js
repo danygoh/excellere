@@ -32,7 +32,7 @@ export async function GET(request) {
       return 'AI Unaware'
     }
     
-    // Calculate readiness score (mock for now)
+    // Calculate readiness score
     const getReadinessScore = (userId) => {
       const userReports = reports?.filter(r => r.user_id === userId) || []
       if (userReports.length > 0) {
@@ -41,13 +41,24 @@ export async function GET(request) {
       return 65
     }
     
-    // Get validator name for user
+    // Get validator name - check validation_queue first, then insight_reports
     const getValidatorName = (userId) => {
-      const userReports = reports?.filter(r => r.user_id === userId) || []
-      if (userReports.length > 0 && userReports[0].validator_id) {
-        const validator = validators?.find(v => v.id === userReports[0].validator_id)
+      // Check validation_queue for this user's reports
+      const userReportIds = reports?.filter(r => r.user_id === userId).map(r => r.id) || []
+      const queueItem = queue?.find(q => userReportIds.includes(q.report_id))
+      
+      if (queueItem?.validator_id) {
+        const validator = validators?.find(v => v.id === queueItem.validator_id)
         return validator?.name || null
       }
+      
+      // Fallback to insight_reports
+      const userReport = reports?.find(r => r.user_id === userId)
+      if (userReport?.validator_id) {
+        const validator = validators?.find(v => v.id === userReport.validator_id)
+        return validator?.name || null
+      }
+      
       return null
     }
     
@@ -86,33 +97,25 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json()
+    const { studentId, validatorId } = body
     
-    // Create user first
-    const { data: user, error: userError } = await supabase.from('users').insert({
-      email: body.email,
-      password_hash: 'demo',
-      first_name: body.firstName,
-      last_name: body.lastName,
-      role: 'learner',
-      job_title: body.jobTitle,
-      sector: body.sector,
-      organisation: body.organisation
-    }).select().single()
+    // Find the student's report in insight_reports
+    const { data: reports } = await supabase.from('insight_reports').select('id').eq('user_id', studentId)
     
-    if (userError) {
-      return NextResponse.json({ error: userError.message }, { status: 500 })
+    if (reports && reports.length > 0) {
+      // Update insight_reports with validator
+      await supabase.from('insight_reports').update({ validator_id: validatorId }).eq('user_id', studentId)
+      
+      // Also update validation_queue if exists
+      await supabase.from('validation_queue').update({ 
+        validator_id: validatorId, 
+        status: 'in_progress' 
+      }).eq('report_id', reports[0].id)
     }
     
-    // Create learner profile
-    await supabase.from('learner_profiles').insert({
-      user_id: user.id,
-      onboarding_step: 0,
-      onboarding_complete: false
-    })
-    
-    return NextResponse.json(user)
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json({ error: 'Failed to create student' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to assign validator' }, { status: 500 })
   }
 }
