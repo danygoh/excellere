@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, use } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 // Learning phases
@@ -246,6 +246,7 @@ export default function Learn() {
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   // Fetch modules from API
   useEffect(() => {

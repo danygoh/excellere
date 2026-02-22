@@ -96,28 +96,35 @@ export default function LearnerDashboard() {
           const isCompleted = progress?.conceptsCompleted?.length >= 3;
           
           return (
-            <div key={module.id} style={{ 
-              background: isActive ? '#0a0a0a' : '#050505', 
-              border: `1px solid ${isActive ? '#d4af37' : '#222'}`,
-              padding: '24px', 
-              marginBottom: '16px',
-              borderRadius: '4px',
-              opacity: isCompleted ? 0.5 : 1
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <span style={{ color: '#444', fontSize: '12px', marginRight: '10px' }}>
-                    MODULE {index + 1}
-                  </span>
-                  <span style={{ color: '#d4af37', fontSize: '18px', fontFamily: 'Playfair Display, serif' }}>
-                    {module.name}
-                  </span>
+            <Link 
+              key={module.id} 
+              href={`/learn?module=${index}`}
+              style={{ textDecoration: 'none', display: 'block' }}
+            >
+              <div style={{ 
+                background: isActive ? '#0a0a0a' : '#050505', 
+                border: `1px solid ${isActive ? '#d4af37' : '#222'}`,
+                padding: '24px', 
+                marginBottom: '16px',
+                borderRadius: '4px',
+                opacity: isCompleted ? 0.5 : 1,
+                cursor: 'pointer'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ color: '#444', fontSize: '12px', marginRight: '10px' }}>
+                      MODULE {index + 1}
+                    </span>
+                    <span style={{ color: '#d4af37', fontSize: '18px', fontFamily: 'Playfair Display, serif' }}>
+                      {module.name}
+                    </span>
+                  </div>
+                  {isCompleted && <span style={{ color: '#2ecc71', fontSize: '12px' }}>✓ COMPLETED</span>}
+                  {isActive && <span style={{ color: '#d4af37', fontSize: '12px' }}>→ IN PROGRESS</span>}
                 </div>
-                {isCompleted && <span style={{ color: '#2ecc71', fontSize: '12px' }}>✓ COMPLETED</span>}
-                {isActive && <span style={{ color: '#d4af37', fontSize: '12px' }}>→ IN PROGRESS</span>}
+                <p style={{ color: '#666', fontSize: '13px', marginTop: '8px' }}>{module.description}</p>
               </div>
-              <p style={{ color: '#666', fontSize: '13px', marginTop: '8px' }}>{module.description}</p>
-            </div>
+            </Link>
           );
         })}
 
