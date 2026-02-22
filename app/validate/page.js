@@ -154,18 +154,18 @@ function ValidatorContent() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '18px', color: '#fff', marginBottom: '8px' }}>
-                {report.first_name} {report.last_name}
+                {report.student_name || 'Unknown Student'}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>
-                {report.role} • {report.sector}
+                {report.student_job_title} • {report.student_organisation}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '11px', color: '#d4af37', marginBottom: '4px' }}>
-                {report.content?.type === 'assessment' ? 'Assessment Report' : 'Programme Report'}
+                {report.module_id?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Programme Report'}
               </div>
               <div style={{ fontSize: '11px', color: '#444' }}>
-                {new Date(report.created_at).toLocaleDateString()}
+                {report.overall_score ? `Score: ${report.overall_score}` : ''}
               </div>
             </div>
           </div>
